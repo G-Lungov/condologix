@@ -1,0 +1,146 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="6EDD6219-D825-77CA-51A4-F5CC55FCFB96" name="T_PACKAGE">
+<createdBy>Gabriel Lungov</createdBy>
+<createdTime>2024-05-22 03:59:50 UTC</createdTime>
+<ownerDesignName>SAAS</ownerDesignName>
+<importedID>6DDED365-3C7A-32F2-6DBF-C893E30D854F</importedID>
+<engineerTo>
+<item key="76B462B4-BC1F-53DF-2B6E-518E5FFC99A1" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="ID_PACKAGE" id="3BEC5821-C3FF-2F2D-D873-CEB572B43FDE">
+<createdBy>Gabriel Lungov</createdBy>
+<createdTime>2024-05-22 03:59:50 UTC</createdTime>
+<ownerDesignName>SAAS</ownerDesignName>
+<importedID>1AA5E16D-1967-8CD5-B19C-D63EC6B1EE07</importedID>
+<engineerTo>
+<item key="76B462B4-BC1F-53DF-2B6E-518E5FFC99A1" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ID_TERMINAL" id="687950B8-C5BD-A95C-FACE-E82DDA558AD9">
+<createdBy>Gabriel Lungov</createdBy>
+<createdTime>2024-05-22 03:59:50 UTC</createdTime>
+<generatorID>8FDC84BA-1B55-AEFC-8814-9E044A4CBE10</generatorID>
+<ownerDesignName>SAAS</ownerDesignName>
+<importedID>5774D00C-39FB-CF04-39A3-CAE766E2A769</importedID>
+<engineerTo>
+<item key="76B462B4-BC1F-53DF-2B6E-518E5FFC99A1" value="true"/>
+</engineerTo>
+<referedAttribute>82BDD4E5-89BF-C010-6CA8-3BFD9F4F4B37</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ID_RESIDENT" id="9502CC34-B8B6-ABAC-2907-6A345FF8B8CA">
+<createdBy>Gabriel Lungov</createdBy>
+<createdTime>2024-05-22 03:59:50 UTC</createdTime>
+<generatorID>47B8FC91-E399-ECC8-96BE-534109DF050B</generatorID>
+<ownerDesignName>SAAS</ownerDesignName>
+<importedID>B930086D-F8C2-E72E-4478-609DEFAA3083</importedID>
+<engineerTo>
+<item key="76B462B4-BC1F-53DF-2B6E-518E5FFC99A1" value="true"/>
+</engineerTo>
+<referedAttribute>B44AE6A7-8C28-7361-0F57-C9CAD37127ED</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ID_CONCIERGE" id="7F8E8017-3140-7184-CED7-DAF0D981AADE">
+<createdBy>Gabriel Lungov</createdBy>
+<createdTime>2024-05-22 03:59:50 UTC</createdTime>
+<generatorID>F268DBA2-EAC2-B5D3-429E-40454864D4EF</generatorID>
+<ownerDesignName>SAAS</ownerDesignName>
+<importedID>DA80F9DD-3DD2-8FC9-4150-77DF2D71CF24</importedID>
+<engineerTo>
+<item key="76B462B4-BC1F-53DF-2B6E-518E5FFC99A1" value="true"/>
+</engineerTo>
+<referedAttribute>C114CFEB-5B15-B134-66AD-93FC9767D4AB</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="SENDER INFO" id="3A7EEA9D-C634-C5CA-FC4C-1D1C33449DCD">
+<createdBy>Gabriel Lungov</createdBy>
+<createdTime>2024-05-22 03:59:50 UTC</createdTime>
+<ownerDesignName>SAAS</ownerDesignName>
+<importedID>80DEC70A-7A12-090A-0992-B5A7B99C5618</importedID>
+<engineerTo>
+<item key="76B462B4-BC1F-53DF-2B6E-518E5FFC99A1" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ARRIVAL_DATE" id="00E839C9-537B-47DC-CC90-2502775A3D3A">
+<createdBy>Gabriel Lungov</createdBy>
+<createdTime>2024-05-22 03:59:50 UTC</createdTime>
+<ownerDesignName>SAAS</ownerDesignName>
+<importedID>4AA1ED80-E7A7-7EDC-98DD-6B61D3C00818</importedID>
+<engineerTo>
+<item key="76B462B4-BC1F-53DF-2B6E-518E5FFC99A1" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="PICKUP_DATE" id="ED66D060-E94E-2792-85F5-189D9CB3D080">
+<createdBy>Gabriel Lungov</createdBy>
+<createdTime>2024-05-22 03:59:50 UTC</createdTime>
+<ownerDesignName>SAAS</ownerDesignName>
+<importedID>BA8131A4-6671-6918-38C7-854CF9966B56</importedID>
+<engineerTo>
+<item key="76B462B4-BC1F-53DF-2B6E-518E5FFC99A1" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="SCAN" id="6CB9F815-8E05-6B8E-08D4-51A98FF14EA0">
+<createdBy>Gabriel Lungov</createdBy>
+<createdTime>2024-05-22 03:59:50 UTC</createdTime>
+<ownerDesignName>SAAS</ownerDesignName>
+<importedID>25CDAD4D-17E5-E560-8951-9B678D4B4139</importedID>
+<engineerTo>
+<item key="76B462B4-BC1F-53DF-2B6E-518E5FFC99A1" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT006</logicalDatatype>
+<dataTypeSize>1</dataTypeSize>
+<ownDataTypeParameters>1,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="184DE568-494D-A04A-89AD-2D480334DF63" name="T_PACKAGE PK">
+<createdBy>Gabriel Lungov</createdBy>
+<createdTime>2024-05-22 03:59:50 UTC</createdTime>
+<ownerDesignName>SAAS</ownerDesignName>
+<importedID>18B5052A-9217-3BD3-6D6F-51C71EEB02C3</importedID>
+<engineerTo>
+<item key="76B462B4-BC1F-53DF-2B6E-518E5FFC99A1" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>3BEC5821-C3FF-2F2D-D873-CEB572B43FDE</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

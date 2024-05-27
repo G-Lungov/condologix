@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="PICKUP" directorySegmentName="seg_0" id="47B8FC91-E399-ECC8-96BE-534109DF050B">
+<createdBy>Gabriel Lungov</createdBy>
+<createdTime>2024-05-22 03:59:50 UTC</createdTime>
+<ownerDesignName>SAAS</ownerDesignName>
+<importedID>0453CCA3-2131-E785-F2B1-87CEBE37D003</importedID>
+<engineerTo>
+<item key="76B462B4-BC1F-53DF-2B6E-518E5FFC99A1" value="true"/>
+</engineerTo>
+<sourcePk>B8387155-96AB-162C-4C80-4DD0C6CDFCA6</sourcePk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>34FF668C-F9B7-0239-BDAB-4F03D8B3A11F</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>6EDD6219-D825-77CA-51A4-F5CC55FCFB96</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

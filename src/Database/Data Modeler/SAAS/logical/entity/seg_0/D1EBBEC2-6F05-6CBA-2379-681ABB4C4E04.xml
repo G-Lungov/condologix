@@ -1,0 +1,89 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="D1EBBEC2-6F05-6CBA-2379-681ABB4C4E04" name="T_CONCIERGE">
+<createdBy>Gabriel Lungov</createdBy>
+<createdTime>2024-05-22 03:59:50 UTC</createdTime>
+<ownerDesignName>SAAS</ownerDesignName>
+<importedID>9D1F878C-DFAB-8AA0-6D71-D2A335111005</importedID>
+<engineerTo>
+<item key="76B462B4-BC1F-53DF-2B6E-518E5FFC99A1" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="ID_CONCIERGE" id="C114CFEB-5B15-B134-66AD-93FC9767D4AB">
+<createdBy>Gabriel Lungov</createdBy>
+<createdTime>2024-05-22 03:59:50 UTC</createdTime>
+<ownerDesignName>SAAS</ownerDesignName>
+<importedID>03DA8754-CD27-A75A-A5C0-87535984DAB8</importedID>
+<engineerTo>
+<item key="76B462B4-BC1F-53DF-2B6E-518E5FFC99A1" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ID_CONDOMINIUM" id="9892DA2A-7216-3EC8-B849-8B0E45C3E295">
+<createdBy>Gabriel Lungov</createdBy>
+<createdTime>2024-05-22 03:59:50 UTC</createdTime>
+<generatorID>025E4D77-CA32-3F08-63C9-40FC142BFEAC</generatorID>
+<ownerDesignName>SAAS</ownerDesignName>
+<importedID>F180931A-A815-1BF5-65C8-8F2F107D5B91</importedID>
+<engineerTo>
+<item key="76B462B4-BC1F-53DF-2B6E-518E5FFC99A1" value="true"/>
+</engineerTo>
+<referedAttribute>B4671145-A721-8FA5-C089-0D4D8BA967D7</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="NAME" id="29738DE1-9249-4C01-9F43-BC068C170D78">
+<createdBy>Gabriel Lungov</createdBy>
+<createdTime>2024-05-22 03:59:50 UTC</createdTime>
+<ownerDesignName>SAAS</ownerDesignName>
+<importedID>35E3C673-E61C-F905-3F11-81DA6877FB03</importedID>
+<engineerTo>
+<item key="76B462B4-BC1F-53DF-2B6E-518E5FFC99A1" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>A3A3C77D-0366-9768-FF89-1C25E56881C8</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="CONTACT" id="BF561D4D-7B6F-7501-8D93-8D5C266AD8E1">
+<createdBy>Gabriel Lungov</createdBy>
+<createdTime>2024-05-22 03:59:50 UTC</createdTime>
+<ownerDesignName>SAAS</ownerDesignName>
+<importedID>39B2B8DB-9D65-4661-8208-F618B118D41B</importedID>
+<engineerTo>
+<item key="76B462B4-BC1F-53DF-2B6E-518E5FFC99A1" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="5ECA66B6-8103-8B03-5D15-5C3D22722AA0" name="T_CONCIERGE PK">
+<createdBy>Gabriel Lungov</createdBy>
+<createdTime>2024-05-22 03:59:50 UTC</createdTime>
+<ownerDesignName>SAAS</ownerDesignName>
+<importedID>DFA55AA1-5293-1A82-ABBD-EA46DDB209DD</importedID>
+<engineerTo>
+<item key="76B462B4-BC1F-53DF-2B6E-518E5FFC99A1" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>C114CFEB-5B15-B134-66AD-93FC9767D4AB</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

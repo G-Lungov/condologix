@@ -1,0 +1,22 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="SAAS" id="01E56B59-DAAA-3E93-9782-95CA6A4BCC1C" version="3.5">
+<createdBy>Gabriel Lungov</createdBy>
+<createdTime>2024-05-22 03:59:19 UTC</createdTime>
+<ownerDesignName>SAAS</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>01E56B59-DAAA-3E93-9782-95CA6A4BCC1C</designId>
+<usedDesignStorageDescriptors>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="E122ADB7-AD88-A6B8-2A9D-7D1B88CC5473">
+<designStoragePath>D:\Users\Gabriel Lungov (New)\Desktop\SAAS</designStoragePath>
+</designDescr>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="1B0BBA60-65FD-5A17-FB9F-D75CDE6546C8">
+<designStoragePath>D:\Users\Gabriel Lungov (New)\Desktop\SAAS</designStoragePath>
+</designDescr>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="134FFBFB-7935-7CF4-2D5B-664ACEFE9F74">
+<designStoragePath>D:\Users\Gabriel Lungov (New)\Desktop\Desktop\CONDOLOGIX\SAAS</designStoragePath>
+</designDescr>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="2AFD3556-08F7-DEAB-27B8-D90165277DBE">
+<designStoragePath>D:\Users\Gabriel Lungov (New)\Desktop\Desktop\CONDOLOGIX\SAAS</designStoragePath>
+</designDescr>
+</usedDesignStorageDescriptors>
+</OSDM_Design>

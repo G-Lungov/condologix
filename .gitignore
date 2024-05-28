@@ -1,0 +1,11 @@
+# Ignore virtual environment directory
+venv/
+
+# Ignore logs
+*.log
+
+# Ignore macOS-specific files
+.DS_Store
+
+# Ignore Visual Studio Code settings
+.vscode/

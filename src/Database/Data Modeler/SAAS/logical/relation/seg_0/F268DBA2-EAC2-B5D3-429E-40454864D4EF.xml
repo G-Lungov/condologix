@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="RECEIVE" directorySegmentName="seg_0" id="F268DBA2-EAC2-B5D3-429E-40454864D4EF">
+<createdBy>Gabriel Lungov</createdBy>
+<createdTime>2024-05-22 03:59:50 UTC</createdTime>
+<ownerDesignName>SAAS</ownerDesignName>
+<importedID>6E3BBC07-76EA-5F58-942A-1893EA7D8C7E</importedID>
+<engineerTo>
+<item key="76B462B4-BC1F-53DF-2B6E-518E5FFC99A1" value="true"/>
+</engineerTo>
+<sourcePk>5ECA66B6-8103-8B03-5D15-5C3D22722AA0</sourcePk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>D1EBBEC2-6F05-6CBA-2379-681ABB4C4E04</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>6EDD6219-D825-77CA-51A4-F5CC55FCFB96</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

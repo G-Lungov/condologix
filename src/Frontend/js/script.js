@@ -56,20 +56,6 @@ window.addEventListener('DOMContentLoaded', event => {
         elements: '#portfolio a.portfolio-box'
     });
 
-     // Fetch data from backend and display it
-    fetch('http://localhost:3000/api/data')
-    .then(response => response.json())
-    .then(data => {
-        const dataDiv = document.getElementById('data');
-        if (dataDiv) {
-            dataDiv.innerHTML = JSON.stringify(data, null, 2);
-        }
-    })
-    .catch(error => {
-        console.error('Error fetching data:', error);
-    });
-});
-
 let popup = document.getElementById("popup");
 let overlay = document.getElementById("overlay");
 

@@ -55,6 +55,7 @@ window.addEventListener('DOMContentLoaded', event => {
     new SimpleLightbox({
         elements: '#portfolio a.portfolio-box'
     });
+});
 
 let popup = document.getElementById("popup");
 let overlay = document.getElementById("overlay");

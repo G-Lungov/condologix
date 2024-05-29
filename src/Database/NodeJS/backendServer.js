@@ -1,47 +1,88 @@
-// backendServer.js
 const express = require('express');
 const mysql = require('mysql');
 const dotenv = require('dotenv');
-
-// Path import
-const path = require('path')
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const path = require('path');
 
 // Load environment variables from .env file
 dotenv.config();
 
 // Create an Express application
 const app = express();
+app.use(express.json()); // To parse JSON bodies
 
 // Serve static files from the Frontend directory
 app.use(express.static(path.join(__dirname, '../../Frontend')));
 
 // Create a MySQL connection pool
 const db = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
-  });
-  
-  // Test the MySQL connection
-  db.getConnection((err, connection) => {
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME
+});
+
+// Test the MySQL connection
+db.getConnection((err, connection) => {
+  if (err) {
+    console.error('Error connecting to the database:', err);
+    return;
+  }
+  console.log('Connected to the MySQL database.');
+  connection.release();
+});
+
+// User login endpoint
+app.post('/api/login', (req, res) => {
+  const { username, password } = req.body;
+  const sql = 'SELECT * FROM users WHERE username = ?';
+  db.query(sql, [username], (err, results) => {
     if (err) {
-      console.error('Error connecting to the database:', err);
-      return;
+      return res.status(500).send('Error on the server.');
     }
-    console.log('Connected to the MySQL database.');
-    connection.release();
+    if (results.length === 0) {
+      return res.status(404).send('No user found.');
+    }
+
+    const user = results[0];
+    const passwordIsValid = bcrypt.compareSync(password, user.password);
+    if (!passwordIsValid) {
+      return res.status(401).send({ auth: false, token: null });
+    }
+
+    const token = jwt.sign({ id: user.id }, process.env.SECRET, {
+      expiresIn: 86400 // 24 hours
+    });
+
+    res.status(200).send({ auth: true, token: token });
   });
-  
-// Define a simple route to fetch data from the database
-app.get('/api/data', (req, res) => {
+});
+
+// Middleware to verify token
+function verifyToken(req, res, next) {
+  const token = req.headers['x-access-token'];
+  if (!token) {
+    return res.status(403).send({ auth: false, message: 'No token provided.' });
+  }
+
+  jwt.verify(token, process.env.SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+    }
+    req.userId = decoded.id;
+    next();
+  });
+}
+
+// Protected route to fetch data
+app.get('/api/data', verifyToken, (req, res) => {
   const sql = 'SELECT * FROM your_table';
   db.query(sql, (err, results) => {
     if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json(results);
+      return res.status(500).send(err);
     }
+    res.json(results);
   });
 });
 

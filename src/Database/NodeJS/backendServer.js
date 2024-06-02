@@ -12,8 +12,8 @@ dotenv.config();
 const app = express();
 app.use(express.json()); // To parse JSON bodies
 
-// Serve static files from the Frontend directory
-app.use(express.static(path.join(__dirname, '../../Frontend')));
+// Serve static files from the Frontend public directory
+app.use(express.static(path.join(__dirname, '../../Public/Frontend')));
 
 // Create a MySQL connection pool
 const db = mysql.createPool({

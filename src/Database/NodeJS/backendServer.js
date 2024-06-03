@@ -33,10 +33,29 @@ db.getConnection((err, connection) => {
   connection.release();
 });
 
+// User registration endpoint
+app.post('/api/register', (req, res) => {
+  const { username, password, email } = req.body;
+  
+  // Hash the user's password
+  const salt = bcrypt.genSaltSync(10);
+  const hashedPassword = bcrypt.hashSync(password, salt);
+
+  // Insert the new user into the database
+  const sql = 'INSERT INTO Users (Username, Password, Email) VALUES (?, ?, ?)';
+  db.query(sql, [username, hashedPassword, email], (err, results) => {
+    if (err) {
+      console.error('Error inserting user:', err);
+      return res.status(500).send('Error registering user.');
+    }
+    res.status(201).send('User registered successfully.');
+  });
+});
+
 // User login endpoint
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
-  const sql = 'SELECT * FROM users WHERE username = ?';
+  const sql = 'SELECT * FROM Users WHERE Username = ?';
   db.query(sql, [username], (err, results) => {
     if (err) {
       return res.status(500).send('Error on the server.');
@@ -46,12 +65,12 @@ app.post('/api/login', (req, res) => {
     }
 
     const user = results[0];
-    const passwordIsValid = bcrypt.compareSync(password, user.password);
+    const passwordIsValid = bcrypt.compareSync(password, user.Password);
     if (!passwordIsValid) {
-      return res.status(401).send({ auth: false, token: null });
+      return res.status(401).send({ auth: false, token: null, message: 'Invalid password' });
     }
 
-    const token = jwt.sign({ id: user.id }, process.env.SECRET, {
+    const token = jwt.sign({ id: user.ID_USER }, process.env.SECRET, {
       expiresIn: 86400 // 24 hours
     });
 

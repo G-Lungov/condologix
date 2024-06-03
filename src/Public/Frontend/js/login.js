@@ -1,12 +1,12 @@
 document.getElementById('loginForm').addEventListener('submit', function(event) {
     event.preventDefault();
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+    const USER_NAME_EMAIL = document.getElementById("userNameEmail").value;
+    const USER_PASSWORD = document.getElementById("userPassword").value;
 
     fetch('http://localhost:3000/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ USER_NAME_EMAIL, USER_PASSWORD })
     })
     .then(response => response.json())
     .then(data => {

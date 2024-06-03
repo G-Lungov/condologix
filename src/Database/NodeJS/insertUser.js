@@ -38,4 +38,4 @@ const insertUser = async (username, password) => {
 };
 
 // Usage example
-insertUser('newuser', 'password123');
+insertUser('gabriel@wedevelops.com', 'gL#2001_');

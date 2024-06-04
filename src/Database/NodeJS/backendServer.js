@@ -1,12 +1,20 @@
+// Import necessary modules
 const express = require('express');
 const mysql = require('mysql');
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const path = require('path');
+const twilio = require('twilio');
 
 // Load environment variables from .env file
 dotenv.config();
+
+// Twilio credentials
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const twiPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
+const client = twilio(accountSid, authToken);
 
 // Create an Express application
 const app = express();
@@ -51,11 +59,11 @@ app.post('/api/login', (req, res) => {
       return res.status(401).send({ auth: false, token: null, message: 'Invalid password' });
     }
 
-    const token = jwt.sign({ id: user.id }, process.env.SECRET, {
+    const token = jwt.sign({ id: user.id, role: user.USER_ROLE }, process.env.SECRET, {
       expiresIn: 86400 // 24 hours
     });
 
-    res.status(200).send({ auth: true, token: token });
+    res.status(200).send({ auth: true, token: token, role: user.USER_ROLE });
   });
 });
 
@@ -84,6 +92,19 @@ app.get('/api/data', verifyToken, (req, res) => {
     }
     res.json(results);
   });
+});
+
+// Endpoint to send WhatsApp message
+app.post('/send-whatsapp', (req, res) => {
+  const { to, message } = req.body;
+
+  client.messages.create({
+    body: message,
+    from: `whatsapp:${twiPhoneNumber}`,
+    to: `whatsapp:${to}`
+  })
+  .then(message => res.status(200).send(`Message sent with SID: ${message.sid}`))
+  .catch(error => res.status(500).send(error));
 });
 
 // Start the server

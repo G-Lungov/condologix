@@ -17,6 +17,7 @@
     "hbs": "^4.2.0",
     "jsonwebtoken": "^9.0.2",
     "mysql": "^2.18.1",
-    "nodemon": "^3.1.2"
+    "nodemon": "^3.1.2",
+    "twilio": "^5.1.0"
   }
 }

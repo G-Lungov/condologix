@@ -66,6 +66,41 @@ window.addEventListener('DOMContentLoaded', event => {
     .catch(error => {
         console.error('Error fetching data:', error);
     });
+
+    // Send message to the resident
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Function to generate a random 4-digit number
+        function generateRandomFourDigitNumber() {
+            return Math.floor(1000 + Math.random() * 9000);
+        }
+        const randomCode = generateRandomFourDigitNumber();
+        const phoneNumber = document.getElementById('contactNumber').value;
+        const recipientName = document.getElementById('name').value;
+        const message = `Olá ${recipientName}, sua encomenda já chegou na portaria, favor apresentar o código a seguir para a retirada. Código: ${randomCode}. Até breve!`
+
+        fetch('/send-whatsapp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ to: phoneNumber, message: message })
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+            window.location.href = 'porteiro.html'
+        })
+        .catch(error => alert('Error: ' + error));
+    });
+    
+    const registerButton = document.getElementById('registerButton');
+    if (registerButton) {
+        registerButton.addEventListener('click', function(e) {
+            document.getElementById('contactForm').dispatchEvent(new Event('submit'));
+        });
+    }
 });
 
 let popup = document.getElementById("popup");
@@ -74,13 +109,21 @@ let overlay = document.getElementById("overlay");
 function openPopup() {
     popup.classList.add("open-popup");
     overlay.style.display = "block"; // Exibe a película
-}
+};
 
 function closePopup() {
     popup.classList.remove("open-popup");
     overlay.style.display = "none"; // Esconde a película
-}
+};
+
+function abrirAdm() {
+    window.location.href = 'adm.html';
+};
 
 function abrirMorador() {
     window.location.href = 'morador.html';
-}
+};
+
+function abrirPorteiro() {
+    window.localStorage.href = 'porteiro.html';
+};

@@ -12,7 +12,22 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     .then(data => {
         if (data.auth && data.token) {
             localStorage.setItem('token', data.token);
-            window.location.href = 'index.html';
+            let redirectUrl = 'index.html';
+            switch (data.role) {
+                case 'A':
+                    redirectUrl = 'adm.html';
+                    break;
+                case 'C':
+                    redirectUrl = 'porteiro.html';
+                    break;
+                case 'R':
+                    redirectUrl = 'morador.html';
+                    break;
+                default:
+                    alert('Role not recognized');
+                    return;
+            }
+            window.location.href = redirectUrl;
         } else {
             alert('Login failed');
         }

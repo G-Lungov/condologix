@@ -100,11 +100,14 @@ app.post('/send-whatsapp', (req, res) => {
 
   client.messages.create({
     body: message,
-    from: `whatsapp:${twiPhoneNumber}`,
-    to: `whatsapp:${to}`
+    from: `whatsapp:${twiPhoneNumber}`, // Ensure this is your approved Twilio WhatsApp number
+    to: `whatsapp:${to}` // Ensure the 'to' number is correctly formatted
   })
   .then(message => res.status(200).send(`Message sent with SID: ${message.sid}`))
-  .catch(error => res.status(500).send(error));
+  .catch(error => {
+    console.error('Twilio Error:', error);
+    res.status(500).send(error);
+  });
 });
 
 // Start the server

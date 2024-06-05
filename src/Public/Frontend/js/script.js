@@ -56,7 +56,12 @@ window.addEventListener('DOMContentLoaded', event => {
     fetch('http://localhost:3000/api/data', {
         headers: { 'x-access-token': token }
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json();
+    })
     .then(data => {
         const dataDiv = document.getElementById('data');
         if (dataDiv) {
@@ -80,7 +85,7 @@ window.addEventListener('DOMContentLoaded', event => {
         const recipientName = document.getElementById('name').value;
         const message = `Olá ${recipientName}, sua encomenda já chegou na portaria, favor apresentar o código a seguir para a retirada. Código: ${randomCode}. Até breve!`
 
-        fetch('/send-whatsapp', {
+        fetch('http://localhost:3000/send-whatsapp', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -23,16 +23,16 @@ app.use(express.json()); // To parse JSON bodies
 // Serve static files from the Frontend public directory
 app.use(express.static(path.join(__dirname, '../../Public/Frontend')));
 
-// Create a MySQL connection pool
-const db = mysql.createPool({
+// Create a MySQL connection pool for the main database
+const mainDb = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME
+  database: process.env.DB_NAME // Main database for user authentication
 });
 
 // Test the MySQL connection
-db.getConnection((err, connection) => {
+mainDb.getConnection((err, connection) => {
   if (err) {
     console.error('Error connecting to the database:', err);
     return;
@@ -45,7 +45,7 @@ db.getConnection((err, connection) => {
 app.post('/api/login', (req, res) => {
   const { USER_NAME_EMAIL, USER_PASSWORD } = req.body;
   const sql = 'SELECT * FROM users WHERE USER_NAME_EMAIL = ?';
-  db.query(sql, [USER_NAME_EMAIL], (err, results) => {
+  mainDb.query(sql, [USER_NAME_EMAIL], (err, results) => {
     if (err) {
       return res.status(500).send('Error on the server.');
     }
@@ -59,16 +59,16 @@ app.post('/api/login', (req, res) => {
       return res.status(401).send({ auth: false, token: null, message: 'Invalid password' });
     }
 
-    const token = jwt.sign({ id: user.id, role: user.USER_ROLE }, process.env.SECRET, {
+    const token = jwt.sign({ id: user.id, role: user.USER_ROLE, database: user.USER_DATABASE }, process.env.SECRET, {
       expiresIn: 86400 // 24 hours
     });
 
-    res.status(200).send({ auth: true, token: token, role: user.USER_ROLE });
+    res.status(200).send({ auth: true, token: token, role: user.USER_ROLE, database: user.USER_DATABASE });
   });
 });
 
-// Middleware to verify token
-function verifyToken(req, res, next) {
+// Middleware to verify token and connect to the appropriate database
+function verifyTokenAndConnect(req, res, next) {
   const token = req.headers['x-access-token'];
   if (!token) {
     return res.status(403).send({ auth: false, message: 'No token provided.' });
@@ -78,15 +78,27 @@ function verifyToken(req, res, next) {
     if (err) {
       return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
     }
+
     req.userId = decoded.id;
+    req.userRole = decoded.role;
+    req.userDatabase = decoded.database;
+
+    // Create a new connection pool for the user's specific database
+    req.userDb = mysql.createPool({
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: decoded.database
+    });
+
     next();
   });
 }
 
-// Protected route to fetch data
-app.get('/api/data', verifyToken, (req, res) => {
-  const sql = 'SELECT * FROM users';
-  db.query(sql, (err, results) => {
+// Protected route to fetch data from the user's specific database
+app.get('/api/data', verifyTokenAndConnect, (req, res) => {
+  const sql = 'SELECT * FROM specific_table'; // Replace 'specific_table' with the actual table name
+  req.userDb.query(sql, (err, results) => {
     if (err) {
       console.error('Error fetching data:', err); // Log the detailed error
       return res.status(500).send('Error fetching data');

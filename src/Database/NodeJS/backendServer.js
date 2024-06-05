@@ -85,10 +85,11 @@ function verifyToken(req, res, next) {
 
 // Protected route to fetch data
 app.get('/api/data', verifyToken, (req, res) => {
-  const sql = 'SELECT * FROM your_table';
+  const sql = 'SELECT * FROM users';
   db.query(sql, (err, results) => {
     if (err) {
-      return res.status(500).send(err);
+      console.error('Error fetching data:', err); // Log the detailed error
+      return res.status(500).send('Error fetching data');
     }
     res.json(results);
   });

@@ -53,6 +53,20 @@ window.addEventListener('DOMContentLoaded', event => {
         return;
     }
 
+    // Decode the JWT token to get user role
+    function parseJwt(token) {
+        var base64Url = token.split('.')[1];
+        var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+
+        return JSON.parse(jsonPayload);
+    }
+
+    const decodedToken = parseJwt(token);
+    const userRole = decodedToken.role;
+
     fetch('http://localhost:3000/api/data', {
         headers: { 'x-access-token': token }
     })
@@ -95,7 +109,21 @@ window.addEventListener('DOMContentLoaded', event => {
         .then(response => response.text())
         .then(data => {
             alert(data);
-            window.location.href = 'porteiro.html'
+            let redirectUrl = 'index.html';
+            switch (userRole) {
+                case 'A':
+                    redirectUrl = 'adm.html';
+                    break;
+                case 'C':
+                    redirectUrl = 'porteiro.html';
+                    break;
+                case 'R':
+                    break;
+                default:
+                    alert('Role not recognized');
+                    return;
+            }
+            window.location.href = redirectUrl;
         })
         .catch(error => alert('Error: ' + error));
     });
@@ -130,5 +158,5 @@ function abrirMorador() {
 };
 
 function abrirPorteiro() {
-    window.localStorage.href = 'porteiro.html';
+    window.location.href = 'porteiro.html';
 };

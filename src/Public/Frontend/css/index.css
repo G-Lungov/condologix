@@ -7600,6 +7600,10 @@ textarea.form-control-lg {
   margin-top: 3rem !important;
 }
 
+.mt-6 {
+  margin-top: 4rem !important;
+}
+
 .mt-auto {
   margin-top: auto !important;
 }
@@ -11013,7 +11017,7 @@ header.masthead h1, header.masthead .h1 {
 
 .open-popup {
   visibility: visible;
-  top: 240%;
+  top: 310%;
   transform: translate(-50%, -50%) scale(1);
   z-index: 999;
 }

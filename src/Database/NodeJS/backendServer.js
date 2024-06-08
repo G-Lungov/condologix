@@ -54,20 +54,23 @@ app.post('/api/login', (req, res) => {
     }
 
     const user = results[0];
-    const passwordIsValid = bcrypt.compareSync(USER_PASSWORD, user.USER_PASSWORD); // Adjusted password comparison
+    const passwordIsValid = bcrypt.compareSync(USER_PASSWORD, user.USER_PASSWORD);
     if (!passwordIsValid) {
       return res.status(401).send({ auth: false, token: null, message: 'Invalid password' });
     }
 
-    const token = jwt.sign({ id: user.ID_USER, role: user.USER_ROLE, database: user.USER_DB }, process.env.SECRET, {
-      expiresIn: 86400 // 24 hours
-    });
+    // Generate JWT token
+    const token = jwt.sign(
+      { id: user.ID_USER, role: user.USER_ROLE, database: user.USER_DB, schema: user.USER_SCHEMA },
+      process.env.SECRET,
+      { expiresIn: 86400 } // 24 hours
+    );
 
     res.status(200).send({ auth: true, token: token, role: user.USER_ROLE, database: user.USER_DB });
   });
 });
 
-// Middleware to verify token and connect to the appropriate database
+// Middleware to verify token and connect to the appropriate database/schema
 function verifyTokenAndConnect(req, res, next) {
   const token = req.headers['x-access-token'];
   if (!token) {
@@ -81,34 +84,36 @@ function verifyTokenAndConnect(req, res, next) {
 
     req.userId = decoded.id;
     req.userRole = decoded.role;
-    req.userDatabase = decoded.database;
+    req.userDatabase = decoded.database
 
-    // Create a new connection pool for the user's specific database
+    // Log the database name for debugging
+    console.log('Connecting to database:', req.userDatabase);
+
+    // Connect to the specific user's database/schema
     req.userDb = mysql.createPool({
       host: process.env.DB_HOST_CONDOMINUMS,
       user: process.env.DB_USER_CONDOMINUMS,
       password: process.env.DB_PASSWORD_CONDOMINUMS,
-      database: req.userDatabase // The specific database name from the token
+      database: req.userDatabase // The specific database or schema name from the token
     });
 
-    next();
+    // Test the connection to the user's database
+    req.userDb.getConnection((err, connection) => {
+      if (err) {
+        console.error('Error connecting to the user\'s database:', err);
+        return res.status(500).send('Error connecting to the user\'s database');
+      }
+      console.log(`Successfully connected to the user's database: ${req.userDatabase}`);
+      connection.release();
+      next();
+    });
   });
 }
 
-// Protected route to fetch data from the user's specific database
+// Protected route to fetch data from the user's specific database/schema
 app.get('/api/data', verifyTokenAndConnect, (req, res) => {
-  // Example table name; replace with actual table name
-  const tableName = 'specific_table';
-  
-  // Use a parameterized query to prevent SQL injection
-  const sql = `SELECT * FROM ??`;
-  req.userDb.query(sql, [tableName], (err, results) => {
-    if (err) {
-      console.error('Error fetching data:', err); // Log the detailed error
-      return res.status(500).send('Error fetching data');
-    }
-    res.json(results);
-  });
+  // Implement your logic to fetch data here, for now, we'll just send a success message
+  res.send('Data route accessed successfully.');
 });
 
 // Endpoint to send WhatsApp message

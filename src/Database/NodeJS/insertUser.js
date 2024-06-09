@@ -24,7 +24,7 @@ const hashPassword = async (password) => {
 const insertUser = async (username, password, role, userDb) => {
   try {
     const hashedPassword = await hashPassword(password);
-    const sql = 'INSERT INTO users (USER_NAME_EMAIL, USER_PASSWORD, USER_ROLE, USER_DATABASE) VALUES (?, ?, ?, ?)';
+    const sql = 'INSERT INTO users (USER_NAME_EMAIL, USER_PASSWORD, USER_ROLE, USER_DB) VALUES (?, ?, ?, ?)';
     db.query(sql, [username, hashedPassword, role, userDb], (err, result) => {
       if (err) {
         console.error('Error inserting user:', err);
@@ -38,4 +38,4 @@ const insertUser = async (username, password, role, userDb) => {
 };
 
 // Usage example
-insertUser('porteiro001@wedevelops.com', 'vR#2024_', 'C', '1');
+insertUser('luciano@wedevelops.com', 'Massaro#2006_', 'A', '03059050LPQC');

@@ -44,7 +44,7 @@ mainDb.getConnection((err, connection) => {
 // User login endpoint
 app.post('/api/login', (req, res) => {
   const { USER_NAME_EMAIL, USER_PASSWORD } = req.body;
-  const sql = 'SELECT * FROM users WHERE USER_NAME_EMAIL = ?';
+  const sql = 'SELECT * FROM Users WHERE USER_NAME_EMAIL = ?';
   mainDb.query(sql, [USER_NAME_EMAIL], (err, results) => {
     if (err) {
       return res.status(500).send('Error on the server.');
@@ -54,20 +54,23 @@ app.post('/api/login', (req, res) => {
     }
 
     const user = results[0];
-    const passwordIsValid = bcrypt.compareSync(USER_PASSWORD, user.USER_PASSWORD); // Adjusted password comparison
+    const passwordIsValid = bcrypt.compareSync(USER_PASSWORD, user.USER_PASSWORD);
     if (!passwordIsValid) {
       return res.status(401).send({ auth: false, token: null, message: 'Invalid password' });
     }
 
-    const token = jwt.sign({ id: user.id, role: user.USER_ROLE, database: user.USER_DATABASE }, process.env.SECRET, {
-      expiresIn: 86400 // 24 hours
-    });
+    // Generate JWT token
+    const token = jwt.sign(
+      { id: user.ID_USER, role: user.USER_ROLE, database: user.USER_DB, schema: user.USER_SCHEMA },
+      process.env.SECRET,
+      { expiresIn: 86400 } // 24 hours
+    );
 
-    res.status(200).send({ auth: true, token: token, role: user.USER_ROLE, database: user.USER_DATABASE });
+    res.status(200).send({ auth: true, token: token, role: user.USER_ROLE, database: user.USER_DB });
   });
 });
 
-// Middleware to verify token and connect to the appropriate database
+// Middleware to verify token and connect to the appropriate database/schema
 function verifyTokenAndConnect(req, res, next) {
   const token = req.headers['x-access-token'];
   if (!token) {
@@ -83,28 +86,62 @@ function verifyTokenAndConnect(req, res, next) {
     req.userRole = decoded.role;
     req.userDatabase = decoded.database;
 
-    // Create a new connection pool for the user's specific database
+    // Log the database name for debugging
+    console.log('Connecting to database:', req.userDatabase);
+
+    // Connect to the specific user's database/schema
     req.userDb = mysql.createPool({
-      host: process.env.DB_HOST,
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: decoded.database
+      host: process.env.DB_HOST_CONDOMINUMS,
+      user: process.env.DB_USER_CONDOMINUMS,
+      password: process.env.DB_PASSWORD_CONDOMINUMS,
+      database: req.userDatabase // The specific database or schema name from the token
     });
 
-    next();
+    // Test the connection to the user's database
+    req.userDb.getConnection((err, connection) => {
+      if (err) {
+        console.error('Error connecting to the user\'s database:', err);
+        return res.status(500).send('Error connecting to the user\'s database');
+      }
+      console.log(`Successfully connected to the user's database: ${req.userDatabase}`);
+      connection.release();
+      next();
+    });
   });
 }
 
-// Protected route to fetch data from the user's specific database
-app.get('/api/data', verifyTokenAndConnect, (req, res) => {
-  const sql = 'SELECT * FROM specific_table'; // Replace 'specific_table' with the actual table name
-  req.userDb.query(sql, (err, results) => {
-    if (err) {
-      console.error('Error fetching data:', err); // Log the detailed error
-      return res.status(500).send('Error fetching data');
+// Middleware to check user role
+function checkUserRole(allowedRoles) {
+  return (req, res, next) => {
+    const userRole = req.userRole; // role set in the verifyTokenAndConnect middleware
+    if (!allowedRoles.includes(userRole)) {
+      return res.status(403).send({ message: 'Access denied: insufficient permissions' });
     }
-    res.json(results);
-  });
+    next();
+  };
+}
+
+// Routes with role-based access control
+
+// Admin page route (adm.html), accessible only by users with role 'A'
+app.get('/adm.html', verifyTokenAndConnect, checkUserRole(['A']), (req, res) => {
+  res.sendFile(path.join(__dirname, '../../Public/Frontend', 'adm.html'));
+});
+
+// Resident page route (morador.html), accessible only by users with role 'R'
+app.get('/morador.html', verifyTokenAndConnect, checkUserRole(['R']), (req, res) => {
+  res.sendFile(path.join(__dirname, '../../Public/Frontend', 'morador.html'));
+});
+
+// Concierge page route (porteiro.html), accessible only by users with role 'C'
+app.get('/porteiro.html', verifyTokenAndConnect, checkUserRole(['C']), (req, res) => {
+  res.sendFile(path.join(__dirname, '../../Public/Frontend', 'porteiro.html'));
+});
+
+// Protected route to fetch data from the user's specific database/schema
+app.get('/api/data', verifyTokenAndConnect, (req, res) => {
+  // Implement your logic to fetch data here, for now, we'll just send a success message
+  res.send('Data route accessed successfully.');
 });
 
 // Endpoint to send WhatsApp message

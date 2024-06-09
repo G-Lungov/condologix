@@ -3,52 +3,105 @@ window.addEventListener('DOMContentLoaded', event => {
     const currentPage = window.location.pathname.split('/').pop();
 
     // Pages that do not require token verification
-    const noTokenPages = ['index.html'];
+    const noTokenPages = ['index.html', 'login.html'];
+
+    // Define allowed roles for each page
+    const pageRoles = {
+        'adm.html': ['A'], // Only administrators
+        'morador.html': ['R'], // Only residents
+        'porteiro.html': ['C'], // Only concierges
+    };
 
     // Check if the current page requires token verification
     if (!noTokenPages.includes(currentPage)) {
-        // Check for token and fetch data
+        // Check for token in localStorage
         const token = localStorage.getItem('token');
         if (!token) {
             window.location.href = 'login.html';
             return;
         }
 
-        // Decode the JWT token to get user role
-        function parseJwt(token) {
-            var base64Url = token.split('.')[1];
-            var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-            var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            }).join(''));
+        // Show loading screen
+        const loadingScreen = document.getElementById('loadingScreen');
+        const mainContent = document.getElementById('mainContent');
+        loadingScreen.style.display = 'flex';
+        mainContent.style.display = 'none';
 
-            return JSON.parse(jsonPayload);
+        // Decode the JWT token to get user information
+        function parseJwt(token) {
+            try {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+                return JSON.parse(jsonPayload);
+            } catch (error) {
+                console.error('Error parsing token:', error);
+                return null;
+            }
         }
 
         const decodedToken = parseJwt(token);
-        const userRole = decodedToken.role;
+        if (!decodedToken) {
+            alert('Invalid token. Please log in again.');
+            window.location.href = 'login.html';
+            return;
+        }
 
+        const userRole = decodedToken.role;
+        console.log('User role:', userRole); // For debugging
+
+        // Check if the user has access to the current page
+        if (pageRoles[currentPage] && !pageRoles[currentPage].includes(userRole)) {
+            alert('You do not have permission to access this page.');
+            window.location.href = 'login.html'; // Or redirect to a specific page based on the role
+            return;
+        }
+
+        // Fetch data from the protected route
         fetch('http://localhost:3000/api/data', {
             headers: { 'x-access-token': token }
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
+                throw new Error('Network response was not ok: ' + response.statusText);
             }
-            return response.json();
+            // Check if the response is JSON
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            } else {
+                return response.text(); // Handle as text if not JSON
+            }
         })
         .then(data => {
             const dataDiv = document.getElementById('data');
             if (dataDiv) {
-                dataDiv.innerHTML = JSON.stringify(data, null, 2);
+                // Check if data is a string (text response)
+                if (typeof data === 'string') {
+                    dataDiv.innerHTML = data;
+                } else {
+                    dataDiv.innerHTML = JSON.stringify(data, null, 2);
+                }
             }
+            // Hide loading screen and show the main content
+            loadingScreen.style.display = 'none';
+            mainContent.style.display = 'block';
         })
         .catch(error => {
             console.error('Error fetching data:', error);
+            alert('Error fetching data: ' + error.message); // Display a more descriptive error
+            // Optionally redirect to login or an error page
+            window.location.href = 'login.html';
         });
+    } else {
+        // Hide loading screen and show the main content if the page doesn't require token verification
+        document.getElementById('loadingScreen').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
     }
 
-    // Other common script logic goes here
+    // Common script logic for all pages
 
     // Navbar shrink function
     var navbarShrink = function () {
@@ -97,27 +150,28 @@ window.addEventListener('DOMContentLoaded', event => {
     });
 });
 
+// Popup management functions
 let popup = document.getElementById("popup");
 let overlay = document.getElementById("overlay");
 
 function openPopup() {
     popup.classList.add("open-popup");
-    overlay.style.display = "block"; // Exibe a película
-};
+    overlay.style.display = "block"; // Show the overlay
+}
 
 function closePopup() {
     popup.classList.remove("open-popup");
-    overlay.style.display = "none"; // Esconde a película
-};
+    overlay.style.display = "none"; // Hide the overlay
+}
 
 function abrirAdm() {
     window.location.href = 'adm.html';
-};
+}
 
 function abrirMorador() {
     window.location.href = 'morador.html';
-};
+}
 
 function abrirPorteiro() {
     window.location.href = 'porteiro.html';
-};
+}

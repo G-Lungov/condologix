@@ -21,6 +21,12 @@ window.addEventListener('DOMContentLoaded', event => {
             return;
         }
 
+        // Show loading screen
+        const loadingScreen = document.getElementById('loadingScreen');
+        const mainContent = document.getElementById('mainContent');
+        loadingScreen.style.display = 'flex';
+        mainContent.style.display = 'none';
+
         // Decode the JWT token to get user information
         function parseJwt(token) {
             try {
@@ -79,6 +85,9 @@ window.addEventListener('DOMContentLoaded', event => {
                     dataDiv.innerHTML = JSON.stringify(data, null, 2);
                 }
             }
+            // Hide loading screen and show the main content
+            loadingScreen.style.display = 'none';
+            mainContent.style.display = 'block';
         })
         .catch(error => {
             console.error('Error fetching data:', error);
@@ -86,6 +95,10 @@ window.addEventListener('DOMContentLoaded', event => {
             // Optionally redirect to login or an error page
             window.location.href = 'login.html';
         });
+    } else {
+        // Hide loading screen and show the main content if the page doesn't require token verification
+        document.getElementById('loadingScreen').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
     }
 
     // Common script logic for all pages

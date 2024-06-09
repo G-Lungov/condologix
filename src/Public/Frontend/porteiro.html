@@ -16,100 +16,134 @@
 
         <link href="css/morador.css" rel="stylesheet" />
         
+        <style>
+            /* Estilos básicos para a tela de carregamento */
+            #loadingScreen {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: white;
+                z-index: 9999;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .spinner {
+                border: 8px solid rgba(0, 0, 0, 0.1);
+                border-left-color: #333;
+                border-radius: 50%;
+                width: 60px;
+                height: 60px;
+                animation: spin 1s linear infinite;
+            }
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+        </style>
+
     </head>
     <body class="sb-nav-fixed">
+        <!-- Tela de carregamento -->
+        <div id="loadingScreen">
+            <div class="spinner"></div>
+        </div>
 
-        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <!-- Seu conteúdo principal aqui -->
+        <div id="mainContent" style="display: none;">
+            
+            <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
 
-            <!-- Navbar Brand-->
-            <a class="navbar-brand" href="index.html">CONDOLOGIX</a>
-    
-            <!-- Navbar-->
-            <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle ms-6" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="index.html">Sair</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </nav>
+                <!-- Navbar Brand-->
+                <a class="navbar-brand" href="index.html">CONDOLOGIX</a>
+        
+                <!-- Navbar-->
+                <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle ms-6" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="index.html">Sair</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
 
-        <div id="layoutSidenav">
+            <div id="layoutSidenav">
+                <div id="layoutSidenav_nav">
+                    <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                        <div class="sb-sidenav-menu">
+                            <div class="nav">
+                                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                                    <div class="sb-nav-link-icon"><i class="fa-solid fa-box-open"></i></div>
+                                    Encomendas
+                                </a>
 
-            <div id="layoutSidenav_nav">
-                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                    <div class="sb-sidenav-menu">
-                        <div class="nav">
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-box-open"></i></div>
-                                Encomendas
-                            </a>
+                                <a class="nav-link" href="index.html">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                    Atualizar Dados
+                                </a>
 
-                            <a class="nav-link" href="index.html">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                                Atualizar Dados
-                            </a>
-
-                            <a class="nav-link" href="">
-                                <div class="sb-nav-link-icon"><i class="fa-brands fa-whatsapp"></i></div>
-                                Suporte
-                            </a>
-                            
-                            <a class="nav-link" href="index.html">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-circle-xmark"></i></i></div>
-                                Sair
-                            </a>
-                        </div>
-                    </div>
-                </nav>
-            </div>
-
-            <div id="layoutSidenav_content">
-                <main>
-                    <div class="container-fluid px-4">
-                        <h1 class="mt-4">Seja Bem-Vindo!</h1>
-                        <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active">O que deseja?</li>
-                        </ol>
-
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-danger text-white mb-4">
-                                    <div class="card-body">Cadastrar encomendas</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="teste-cadastro.html">Cadastrar</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
-                                </div>
+                                <a class="nav-link" href="">
+                                    <div class="sb-nav-link-icon"><i class="fa-brands fa-whatsapp"></i></div>
+                                    Suporte
+                                </a>
+                                
+                                <a class="nav-link" href="index.html">
+                                    <div class="sb-nav-link-icon"><i class="fa-solid fa-circle-xmark"></i></i></div>
+                                    Sair
+                                </a>
                             </div>
-
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-danger text-white mb-4">
-                                    <div class="card-body">Atualizar Dados Cadastrados</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="">Acessar Formulário</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-danger text-white mb-4">
-                                    <div class="card-body">Suporte</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="">Mandar uma Mensagem</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>  
                         </div>
-                    </div>
-                </main>
+                    </nav>
+                </div>
 
-                <!-- Footer-->
-                <footer class="py-5">
-                    <div class="container px-4 px-lg-5"><div class="small text-center text-muted"><p>Copyrights &copy; 2024 All Rights Reserved by <a href="" class="">WeDevelops</a></p></div></div>
-                </footer>
+                <div id="layoutSidenav_content">
+                    <main>
+                        <div class="container-fluid px-4">
+                            <h1 class="mt-4">Seja Bem-Vindo!</h1>
+                            <ol class="breadcrumb mb-4">
+                                <li class="breadcrumb-item active">O que deseja?</li>
+                            </ol>
+
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="card bg-danger text-white mb-4">
+                                        <div class="card-body">Cadastrar encomendas</div>
+                                        <div class="card-footer d-flex align-items-center justify-content-between">
+                                            <a class="small text-white stretched-link" href="teste-cadastro.html">Cadastrar</a>
+                                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="card bg-danger text-white mb-4">
+                                        <div class="card-body">Atualizar Dados Cadastrados</div>
+                                        <div class="card-footer d-flex align-items-center justify-content-between">
+                                            <a class="small text-white stretched-link" href="">Acessar Formulário</a>
+                                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="card bg-danger text-white mb-4">
+                                        <div class="card-body">Suporte</div>
+                                        <div class="card-footer d-flex align-items-center justify-content-between">
+                                            <a class="small text-white stretched-link" href="">Mandar uma Mensagem</a>
+                                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                        </div>
+                                    </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </main>
+
+                    <!-- Footer-->
+                    <footer class="py-5">
+                        <div class="container px-4 px-lg-5"><div class="small text-center text-muted"><p>Copyrights &copy; 2024 All Rights Reserved by <a href="" class="">WeDevelops</a></p></div></div>
+                    </footer>
+                </div>
             </div>
         </div>
         

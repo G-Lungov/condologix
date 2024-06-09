@@ -11181,3 +11181,7 @@ div.plan-table {
 .mr-0 {
   margin-right: 2.5rem;
 }
+
+.costumer-img {
+  max-width: 10rem;
+}

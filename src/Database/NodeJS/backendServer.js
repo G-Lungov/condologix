@@ -84,7 +84,7 @@ function verifyTokenAndConnect(req, res, next) {
 
     req.userId = decoded.id;
     req.userRole = decoded.role;
-    req.userDatabase = decoded.database
+    req.userDatabase = decoded.database;
 
     // Log the database name for debugging
     console.log('Connecting to database:', req.userDatabase);
@@ -109,6 +109,34 @@ function verifyTokenAndConnect(req, res, next) {
     });
   });
 }
+
+// Middleware to check user role
+function checkUserRole(allowedRoles) {
+  return (req, res, next) => {
+    const userRole = req.userRole; // role set in the verifyTokenAndConnect middleware
+    if (!allowedRoles.includes(userRole)) {
+      return res.status(403).send({ message: 'Access denied: insufficient permissions' });
+    }
+    next();
+  };
+}
+
+// Routes with role-based access control
+
+// Admin page route (adm.html), accessible only by users with role 'A'
+app.get('/adm.html', verifyTokenAndConnect, checkUserRole(['A']), (req, res) => {
+  res.sendFile(path.join(__dirname, '../../Public/Frontend', 'adm.html'));
+});
+
+// Resident page route (morador.html), accessible only by users with role 'R'
+app.get('/morador.html', verifyTokenAndConnect, checkUserRole(['R']), (req, res) => {
+  res.sendFile(path.join(__dirname, '../../Public/Frontend', 'morador.html'));
+});
+
+// Concierge page route (porteiro.html), accessible only by users with role 'C'
+app.get('/porteiro.html', verifyTokenAndConnect, checkUserRole(['C']), (req, res) => {
+  res.sendFile(path.join(__dirname, '../../Public/Frontend', 'porteiro.html'));
+});
 
 // Protected route to fetch data from the user's specific database/schema
 app.get('/api/data', verifyTokenAndConnect, (req, res) => {

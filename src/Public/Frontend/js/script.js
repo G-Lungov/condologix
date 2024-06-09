@@ -5,6 +5,13 @@ window.addEventListener('DOMContentLoaded', event => {
     // Pages that do not require token verification
     const noTokenPages = ['index.html', 'login.html'];
 
+    // Define allowed roles for each page
+    const pageRoles = {
+        'adm.html': ['A'], // Only administrators
+        'morador.html': ['R'], // Only residents
+        'porteiro.html': ['C'], // Only concierges
+    };
+
     // Check if the current page requires token verification
     if (!noTokenPages.includes(currentPage)) {
         // Check for token in localStorage
@@ -38,6 +45,13 @@ window.addEventListener('DOMContentLoaded', event => {
 
         const userRole = decodedToken.role;
         console.log('User role:', userRole); // For debugging
+
+        // Check if the user has access to the current page
+        if (pageRoles[currentPage] && !pageRoles[currentPage].includes(userRole)) {
+            alert('You do not have permission to access this page.');
+            window.location.href = 'login.html'; // Or redirect to a specific page based on the role
+            return;
+        }
 
         // Fetch data from the protected route
         fetch('http://localhost:3000/api/data', {

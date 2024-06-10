@@ -125,32 +125,32 @@ function checkUserRole(allowedRoles) {
 
 // Admin page route (adm.html), accessible only by users with role 'A'
 app.get('/adm', verifyTokenAndConnect, checkUserRole(['A']), (req, res) => {
-  res.sendFile(path.join(__dirname, '../../public', 'adm.html'));
+  res.sendFile(path.join(__dirname, '../../../adm', 'index'));
 });
 
 // Resident page route (morador.html), accessible only by users with role 'R'
 app.get('/morador', verifyTokenAndConnect, checkUserRole(['R']), (req, res) => {
-  res.sendFile(path.join(__dirname, '../../public', 'morador.html'));
+  res.sendFile(path.join(__dirname, '../../../morador', 'index'));
 });
 
 // Concierge page route (porteiro.html), accessible only by users with role 'C'
 app.get('/porteiro', verifyTokenAndConnect, checkUserRole(['C']), (req, res) => {
-  res.sendFile(path.join(__dirname, '../../public', 'porteiro.html'));
+  res.sendFile(path.join(__dirname, '../../../porteiro', 'index'));
 });
 
 // History page route (history.html), accessible to all authenticated users
 app.get('/history', verifyTokenAndConnect, (req, res) => {
-  res.sendFile(path.join(__dirname, '../../public', 'history.html'));
+  res.sendFile(path.join(__dirname, '../../../history', 'index'));
 });
 
 // Test registration page route (teste-cadastro.html), accessible to all authenticated users
 app.get('/teste-cadastro', verifyTokenAndConnect, (req, res) => {
-  res.sendFile(path.join(__dirname, '../../public', 'teste-cadastro.html'));
+  res.sendFile(path.join(__dirname, '../../../teste-cadastro', 'index'));
 });
 
 // Default route for the main index page
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../public', 'index.html'));
+  res.sendFile(path.join(__dirname, '../../../', 'index'));
 });
 
 // Protected route to fetch data from the user's specific database/schema

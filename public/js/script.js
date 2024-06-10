@@ -60,7 +60,7 @@ window.addEventListener('DOMContentLoaded', event => {
         }
 
         // Fetch data from the protected route (optional)
-        fetch('http://localhost:3000/api/data', {
+        fetch('https://condologix.com/api/data', {
             headers: { 'x-access-token': token }
         })
         .then(response => {

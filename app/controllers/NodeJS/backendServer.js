@@ -20,8 +20,8 @@ const client = twilio(accountSid, authToken);
 const app = express();
 app.use(express.json()); // To parse JSON bodies
 
-// Serve static files from the Frontend public directory
-app.use(express.static(path.join(__dirname, '../../Public/Frontend')));
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, '../../public')));
 
 // Create a MySQL connection pool for the main database
 const mainDb = mysql.createPool({
@@ -124,18 +124,33 @@ function checkUserRole(allowedRoles) {
 // Routes with role-based access control
 
 // Admin page route (adm.html), accessible only by users with role 'A'
-app.get('/adm.html', verifyTokenAndConnect, checkUserRole(['A']), (req, res) => {
-  res.sendFile(path.join(__dirname, '../../Public/Frontend', 'adm.html'));
+app.get('/adm', verifyTokenAndConnect, checkUserRole(['A']), (req, res) => {
+  res.sendFile(path.join(__dirname, '../../public', 'adm.html'));
 });
 
 // Resident page route (morador.html), accessible only by users with role 'R'
-app.get('/morador.html', verifyTokenAndConnect, checkUserRole(['R']), (req, res) => {
-  res.sendFile(path.join(__dirname, '../../Public/Frontend', 'morador.html'));
+app.get('/morador', verifyTokenAndConnect, checkUserRole(['R']), (req, res) => {
+  res.sendFile(path.join(__dirname, '../../public', 'morador.html'));
 });
 
 // Concierge page route (porteiro.html), accessible only by users with role 'C'
-app.get('/porteiro.html', verifyTokenAndConnect, checkUserRole(['C']), (req, res) => {
-  res.sendFile(path.join(__dirname, '../../Public/Frontend', 'porteiro.html'));
+app.get('/porteiro', verifyTokenAndConnect, checkUserRole(['C']), (req, res) => {
+  res.sendFile(path.join(__dirname, '../../public', 'porteiro.html'));
+});
+
+// History page route (history.html), accessible to all authenticated users
+app.get('/history', verifyTokenAndConnect, (req, res) => {
+  res.sendFile(path.join(__dirname, '../../public', 'history.html'));
+});
+
+// Test registration page route (teste-cadastro.html), accessible to all authenticated users
+app.get('/teste-cadastro', verifyTokenAndConnect, (req, res) => {
+  res.sendFile(path.join(__dirname, '../../public', 'teste-cadastro.html'));
+});
+
+// Default route for the main index page
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../public', 'index.html'));
 });
 
 // Protected route to fetch data from the user's specific database/schema

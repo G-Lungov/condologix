@@ -20,8 +20,21 @@ const client = twilio(accountSid, authToken);
 const app = express();
 app.use(express.json()); // To parse JSON bodies
 
-// Serve static files from the 'public' directory
-app.use(express.static(path.join(__dirname, '../../public')));
+// Serve arquivos estáticos das pastas principais
+app.use(express.static(path.join(__dirname, '../../../')));
+
+// Serve arquivos estáticos das subpastas específicas
+app.use('/assets', express.static(path.join(__dirname, '../../../assets')));
+app.use('/css', express.static(path.join(__dirname, '../../../css')));
+app.use('/js', express.static(path.join(__dirname, '../../../js')));
+
+// Serve arquivos estáticos das páginas com subdiretórios
+app.use('/adm', express.static(path.join(__dirname, '../../../adm')));
+app.use('/history', express.static(path.join(__dirname, '../../../history')));
+app.use('/login', express.static(path.join(__dirname, '../../../login')));
+app.use('/morador', express.static(path.join(__dirname, '../../../morador')));
+app.use('/porteiro', express.static(path.join(__dirname, '../../../porteiro')));
+app.use('/teste-cadastro', express.static(path.join(__dirname, '../../../teste-cadastro')));
 
 // Create a MySQL connection pool for the main database
 const mainDb = mysql.createPool({
@@ -173,4 +186,10 @@ app.post('/send-whatsapp', (req, res) => {
     console.error('Twilio Error:', error);
     res.status(500).send(error);
   });
+});
+
+//Start the server
+const PORT = process.env.PORT
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
 });

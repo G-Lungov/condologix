@@ -28,20 +28,20 @@
     <body id="page-top">
 
         <!-- Navigation-->
-            <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
-                <div class="container px-4 px-lg-5">
-                    <a class="navbar-brand" href="">CONDOLOGIX</a>
-                    <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                    <div class="collapse navbar-collapse" id="navbarResponsive">
-                        <ul class="navbar-nav ms-auto my-2 my-lg-0">
-                            <li class="nav-item"><a class="nav-link" href="">HOME</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#about">SERVIÇOS</a></li>
-                            <li class="nav-item"><a class="nav-link" href="login.html">LOGIN</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#contact">DÚVIDAS</a></li>
-                        </ul>
-                    </div>
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="/">CONDOLOGIX</a> <!-- Updated href for root -->
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto my-2 my-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="/">HOME</a></li> <!-- Updated href for root -->
+                        <li class="nav-item"><a class="nav-link" href="#about">SERVIÇOS</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/login">LOGIN</a></li> <!-- Updated href for login -->
+                        <li class="nav-item"><a class="nav-link" href="#contact">DÚVIDAS</a></li>
+                    </ul>
                 </div>
-            </nav>
+            </div>
+        </nav>
 
         <!-- HeadLine-->
         <header class="masthead">
@@ -53,8 +53,8 @@
                     </div>
                     <div class="col-lg-8 align-self-baseline">
                         <p class="text-white-75 mb-5">Somos um sistema que em menos de 30 segundos registra e avisa o morador que sua encomenda chegou!</p>
-                        <a class="btn btn-primary btn-xl mx-2" href="">Entrar em contato</a>
-                        <a class="btn btn-primary btn-xl mx-2" href="teste-cadastro.html">Veja Como Funciona!</a>
+                        <a class="btn btn-primary btn-xl mx-2" href="#contact">Entrar em contato</a>
+                        <a class="btn btn-primary btn-xl mx-2" href="/teste-cadastro">Veja Como Funciona!</a> <!-- Updated href for testing page -->
                     </div>
                 </div>
             </div>
@@ -73,7 +73,6 @@
                     </div>
                 </div>
             </div>
-            
         </section>
 
         <!-- Section 2-->
@@ -137,7 +136,6 @@
                         </div>
                     </div>
                 </div>
-                
             </div>
         </section>
 
@@ -238,7 +236,7 @@
             <div class="container-fluid p-0">
                 <div class="row g-0">
                     <div class="col-lg-4 col-sm-6">
-                        <a class="services-box" href="morador.html" title="Login - Morador">
+                        <a class="services-box" href="/morador" title="Login - Morador"> <!-- Updated href for resident -->
                             <img class="img-fluid" src="assets/img/morador.png" alt=""/>
                             <div class="services-box-caption">
                                 <div class="project-category text-white-50">Você é</div>
@@ -247,7 +245,7 @@
                         </a>
                     </div>
                     <div class="col-lg-4 col-sm-6">
-                        <a class="services-box" href="porteiro.html" title="Login - Porteiro">
+                        <a class="services-box" href="/porteiro" title="Login - Porteiro"> <!-- Updated href for concierge -->
                             <img class="img-fluid" src="assets/img/porteiro.png" alt="" />
                             <div class="services-box-caption">
                                 <div class="project-category text-white-50">Você é</div>
@@ -256,7 +254,7 @@
                         </a>
                     </div>
                     <div class="col-lg-4 col-sm-6">
-                        <a class="services-box" href="adm.html" title="Login - Administrador">
+                        <a class="services-box" href="/adm" title="Login - Administrador"> <!-- Updated href for admin -->
                             <img class="img-fluid" src="assets/img/sindico.png" alt="" />
                             <div class="services-box-caption">
                                 <div class="project-category text-white-50">Você é</div>
@@ -291,7 +289,7 @@
                                 </li>
                             </ol>
                         </div>
-                        <a class="btn btn-primary btn-xl mx-2" href="">Entrar em contato</a>
+                        <a class="btn btn-primary btn-xl mx-2" href="#contact">Entrar em contato</a>
                     </div>
                 </div>
             </div>
@@ -299,7 +297,7 @@
 
         <!-- Footer-->
         <footer class="py-5">
-            <div class="container px-4 px-lg-5"><div class="small text-center text-muted"><p>Copyrights &copy; 2024 All Rights Reserved by <a href="" class="">WeDevelops</a></p></div></div>
+            <div class="container px-4 px-lg-5"><div class="small text-center text-muted"><p>Copyrights &copy; 2024 All Rights Reserved by <a href="">WeDevelops</a></p></div></div>
         </footer>
         
         <!-- Bootstrap core JS-->

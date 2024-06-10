@@ -3,13 +3,13 @@ window.addEventListener('DOMContentLoaded', event => {
     const currentPage = window.location.pathname.split('/').pop();
 
     // Pages that do not require token verification
-    const noTokenPages = ['index.html', 'login.html'];
+    const noTokenPages = ['', 'index', 'login']; // Updated for cleaner URLs without .html
 
     // Define allowed roles for each page
     const pageRoles = {
-        'adm.html': ['A'], // Only administrators
-        'morador.html': ['R'], // Only residents
-        'porteiro.html': ['C'], // Only concierges
+        'adm': ['A'],        // Only administrators
+        'morador': ['R'],    // Only residents
+        'porteiro': ['C'],   // Only concierges
     };
 
     // Check if the current page requires token verification
@@ -17,15 +17,15 @@ window.addEventListener('DOMContentLoaded', event => {
         // Check for token in localStorage
         const token = localStorage.getItem('token');
         if (!token) {
-            window.location.href = 'login.html';
+            window.location.href = 'login';
             return;
         }
 
         // Show loading screen
         const loadingScreen = document.getElementById('loadingScreen');
         const mainContent = document.getElementById('mainContent');
-        loadingScreen.style.display = 'flex';
-        mainContent.style.display = 'none';
+        if (loadingScreen) loadingScreen.style.display = 'flex';
+        if (mainContent) mainContent.style.display = 'none';
 
         // Decode the JWT token to get user information
         function parseJwt(token) {
@@ -45,7 +45,7 @@ window.addEventListener('DOMContentLoaded', event => {
         const decodedToken = parseJwt(token);
         if (!decodedToken) {
             alert('Invalid token. Please log in again.');
-            window.location.href = 'login.html';
+            window.location.href = 'login';
             return;
         }
 
@@ -55,11 +55,11 @@ window.addEventListener('DOMContentLoaded', event => {
         // Check if the user has access to the current page
         if (pageRoles[currentPage] && !pageRoles[currentPage].includes(userRole)) {
             alert('You do not have permission to access this page.');
-            window.location.href = 'login.html'; // Or redirect to a specific page based on the role
+            window.location.href = 'login'; // Redirect to login page
             return;
         }
 
-        // Fetch data from the protected route
+        // Fetch data from the protected route (optional)
         fetch('http://localhost:3000/api/data', {
             headers: { 'x-access-token': token }
         })
@@ -86,19 +86,21 @@ window.addEventListener('DOMContentLoaded', event => {
                 }
             }
             // Hide loading screen and show the main content
-            loadingScreen.style.display = 'none';
-            mainContent.style.display = 'block';
+            if (loadingScreen) loadingScreen.style.display = 'none';
+            if (mainContent) mainContent.style.display = 'block';
         })
         .catch(error => {
             console.error('Error fetching data:', error);
             alert('Error fetching data: ' + error.message); // Display a more descriptive error
             // Optionally redirect to login or an error page
-            window.location.href = 'login.html';
+            window.location.href = 'login';
         });
     } else {
         // Hide loading screen and show the main content if the page doesn't require token verification
-        document.getElementById('loadingScreen').style.display = 'none';
-        document.getElementById('mainContent').style.display = 'block';
+        const loadingScreen = document.getElementById('loadingScreen');
+        const mainContent = document.getElementById('mainContent');
+        if (loadingScreen) loadingScreen.style.display = 'none';
+        if (mainContent) mainContent.style.display = 'block';
     }
 
     // Common script logic for all pages
@@ -165,13 +167,13 @@ function closePopup() {
 }
 
 function abrirAdm() {
-    window.location.href = 'adm.html';
+    window.location.href = 'adm';
 }
 
 function abrirMorador() {
-    window.location.href = 'morador.html';
+    window.location.href = 'morador';
 }
 
 function abrirPorteiro() {
-    window.location.href = 'porteiro.html';
+    window.location.href = 'porteiro';
 }

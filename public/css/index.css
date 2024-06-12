@@ -7266,6 +7266,11 @@ textarea.form-control-lg {
   max-width: 100% !important;
 }
 
+.w-1 {
+  width: 80rem !important;
+}
+
+
 .vw-100 {
   width: 100vw !important;
 }
@@ -7536,6 +7541,10 @@ textarea.form-control-lg {
   margin-left: 3rem !important;
 }
 
+.mx-6 {
+  margin-right: 15rem !important;
+}
+
 .mx-auto {
   margin-right: auto !important;
   margin-left: auto !important;
@@ -7688,6 +7697,10 @@ textarea.form-control-lg {
 
 .ms-5 {
   margin-left: 3rem !important;
+}
+
+.ms-6 {
+  margin-left: 2.5rem !important;
 }
 
 .ms-auto {
@@ -10937,7 +10950,7 @@ hr.divider-large {
 header.masthead {
   padding-top: 10rem;
   padding-bottom: calc(10rem - 4.5rem);
-  background: linear-gradient(to bottom, rgba(3, 41, 121, 0.6) 0%, rgba(3, 41, 121, 1) 100%), url("../assets/img/logo.jpg");
+  background: linear-gradient(to bottom, rgba(3, 41, 121, 0.4) 0%, rgba(3, 41, 121, 1) 100%), url("../assets/img/logo.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: scroll;
@@ -10985,7 +10998,7 @@ header.masthead h1, header.masthead .h1 {
   text-align: center;
   opacity: 0;
   color: #fff;
-  background: rgba(211, 168, 113, 0.9);
+  background: rgba(3, 41, 121, 0.9);
   transition: opacity 0.25s ease;
   text-align: center;
 }
@@ -11180,6 +11193,10 @@ div.plan-table {
 
 .mr-0 {
   margin-right: 2.5rem;
+}
+
+.mr-1 {
+  margin-right: 5rem;
 }
 
 .costumer-img {

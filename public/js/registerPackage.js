@@ -13,7 +13,7 @@ window.addEventListener('DOMContentLoaded', event => {
         const recipientName = document.getElementById('name').value;
         const message = `Olá ${recipientName}, sua encomenda já chegou na portaria, favor apresentar o código a seguir para a retirada. Código: ${randomCode}. Até breve!`;
 
-        fetch('http://localhost:3000/send-whatsapp', {
+        fetch('https://condologix.com/send-whatsapp', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -23,18 +23,33 @@ window.addEventListener('DOMContentLoaded', event => {
         .then(response => response.text())
         .then(data => {
             alert(data);
+
+            // Fetch the token from local storage
             const token = localStorage.getItem('token');
-            const userRole = token ? JSON.parse(atob(token.split('.')[1])).role : null;
-            let redirectUrl = 'index.html';
+            let userRole = null;
+
+            if (token) {
+                try {
+                    const decodedToken = JSON.parse(atob(token.split('.')[1]));
+                    userRole = decodedToken.role;
+                } catch (error) {
+                    console.error('Error decoding token:', error);
+                    alert('Invalid token. Please log in again.');
+                    window.location.href = 'login'; // Redirect to login if token is invalid
+                    return;
+                }
+            }
+
+            let redirectUrl = '/'; // Default to index
             switch (userRole) {
                 case 'A':
-                    redirectUrl = 'adm.html';
+                    redirectUrl = '/adm';
                     break;
                 case 'C':
-                    redirectUrl = 'porteiro.html';
+                    redirectUrl = '/porteiro';
                     break;
                 case 'R':
-                    redirectUrl = 'morador.html';
+                    redirectUrl = '/morador';
                     break;
                 default:
                     alert('Role not recognized');

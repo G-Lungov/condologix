@@ -20,8 +20,21 @@ const client = twilio(accountSid, authToken);
 const app = express();
 app.use(express.json()); // To parse JSON bodies
 
-// Serve static files from the Frontend public directory
-app.use(express.static(path.join(__dirname, '../../Public/Frontend')));
+// Serve arquivos estáticos das pastas principais
+app.use(express.static(path.join(__dirname, '../../../')));
+
+// Serve arquivos estáticos das subpastas específicas
+app.use('/assets', express.static(path.join(__dirname, '../../../assets')));
+app.use('/css', express.static(path.join(__dirname, '../../../css')));
+app.use('/js', express.static(path.join(__dirname, '../../../js')));
+
+// Serve arquivos estáticos das páginas com subdiretórios
+app.use('/adm', express.static(path.join(__dirname, '../../../adm')));
+app.use('/history', express.static(path.join(__dirname, '../../../history')));
+app.use('/login', express.static(path.join(__dirname, '../../../login')));
+app.use('/morador', express.static(path.join(__dirname, '../../../morador')));
+app.use('/porteiro', express.static(path.join(__dirname, '../../../porteiro')));
+app.use('/teste-cadastro', express.static(path.join(__dirname, '../../../teste-cadastro')));
 
 // Create a MySQL connection pool for the main database
 const mainDb = mysql.createPool({
@@ -124,18 +137,33 @@ function checkUserRole(allowedRoles) {
 // Routes with role-based access control
 
 // Admin page route (adm.html), accessible only by users with role 'A'
-app.get('/adm.html', verifyTokenAndConnect, checkUserRole(['A']), (req, res) => {
-  res.sendFile(path.join(__dirname, '../../Public/Frontend', 'adm.html'));
+app.get('/adm', verifyTokenAndConnect, checkUserRole(['A']), (req, res) => {
+  res.sendFile(path.join(__dirname, '../../../adm', 'index'));
 });
 
 // Resident page route (morador.html), accessible only by users with role 'R'
-app.get('/morador.html', verifyTokenAndConnect, checkUserRole(['R']), (req, res) => {
-  res.sendFile(path.join(__dirname, '../../Public/Frontend', 'morador.html'));
+app.get('/morador', verifyTokenAndConnect, checkUserRole(['R']), (req, res) => {
+  res.sendFile(path.join(__dirname, '../../../morador', 'index'));
 });
 
 // Concierge page route (porteiro.html), accessible only by users with role 'C'
-app.get('/porteiro.html', verifyTokenAndConnect, checkUserRole(['C']), (req, res) => {
-  res.sendFile(path.join(__dirname, '../../Public/Frontend', 'porteiro.html'));
+app.get('/porteiro', verifyTokenAndConnect, checkUserRole(['C']), (req, res) => {
+  res.sendFile(path.join(__dirname, '../../../porteiro', 'index'));
+});
+
+// History page route (history.html), accessible to all authenticated users
+app.get('/history', verifyTokenAndConnect, (req, res) => {
+  res.sendFile(path.join(__dirname, '../../../history', 'index'));
+});
+
+// Test registration page route (teste-cadastro.html), accessible to all authenticated users
+app.get('/teste-cadastro', verifyTokenAndConnect, (req, res) => {
+  res.sendFile(path.join(__dirname, '../../../teste-cadastro', 'index'));
+});
+
+// Default route for the main index page
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../../', 'index'));
 });
 
 // Protected route to fetch data from the user's specific database/schema
@@ -160,8 +188,8 @@ app.post('/send-whatsapp', (req, res) => {
   });
 });
 
-// Start the server
-const PORT = process.env.PORT || 3000;
+//Start the server
+const PORT = process.env.PORT
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Servidor rodando na porta ${PORT}`);
 });

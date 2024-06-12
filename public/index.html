@@ -35,7 +35,7 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ms-auto my-2 my-lg-0">
                         <li class="nav-item"><a class="nav-link" href="/">HOME</a></li> <!-- Updated href for root -->
-                        <li class="nav-item"><a class="nav-link" href="#about">SERVIÇOS</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#services">SERVIÇOS</a></li>
                         <li class="nav-item"><a class="nav-link" href="/login">LOGIN</a></li> <!-- Updated href for login -->
                         <li class="nav-item"><a class="nav-link" href="#contact">DÚVIDAS</a></li>
                     </ul>
@@ -54,29 +54,77 @@
                     <div class="col-lg-8 align-self-baseline">
                         <p class="text-white-75 mb-5">Somos um sistema que em menos de 30 segundos registra e avisa o morador que sua encomenda chegou!</p>
                         <a class="btn btn-primary btn-xl mx-2" href="#contact">Entrar em contato</a>
-                        <a class="btn btn-primary btn-xl mx-2" href="/teste-cadastro">Veja Como Funciona!</a> <!-- Updated href for testing page -->
                     </div>
                 </div>
             </div>
         </header>
 
-        <!-- Section 1-->
+        <!-- Section - Sobre Nós-->
         <section class="page-section bg-primary py-6" id="problems"> 
             <div class="container px-4 px-lg-5">
-                <h2 class="text-white text-center mt-0">PARA QUEM É?</h2>
+                <h2 class="text-white text-center mt-0">SOBRE NÓS</h2>
                 <hr class="divider divider-light" />
-                <div class="row gx-4 gx-lg-5 justify-content-center align-items-center">
-                    <div class="col-lg-6 text-center">
-                        <p class="text-white mt-4 mb-4 font-weight-bold-2">
-                            Condologix é ideal para condomínios residenciais que desejam modernizar e otimizar a gestão de pacotes, proporcionando notificações instantâneas e segurança aprimorada aos moradores.
-                        </p>
+                <div class="row gx-4 gx-lg-5 justify-content-center align-items-center w-1">
+                    <div class="col-lg-8">
+                        <div class="d-flex justify-content-between">
+                            <p class="d-flex text-white mt-4 mb-4 font-weight-bold-2">
+                                Somos um sistema que em menos de 30 segundos registra e avisa o morador que sua encomenda chegou!
+                            </p>
+                            <p class="text-white mt-4 mb-4 font-weight-bold-1 ">
+                                Utilizamos inteligência artificial para identificar a residência de destino de cada entrega e a partir daí, tudo se torna incrivelmente ágil e eficiente, nosso
+                                sistema automaticamente cadastra a encomenda, atribui ao respectivo
+                                condômino e envia uma notificação instantânea pelo WhatsApp, informando
+                                sobre a chegada do pacote.
+                                <br>
+                                <br>
+                                Isso não só elimina a necessidade de visitas à portaria para checar a entrega,
+                                mas também proporciona uma comunicação direta e imediata com os
+                                moradores, sem incomodá-los com ligações no interfone.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
+        
 
-        <!-- Section 2-->
-        <section class="page-section" id="about">
+        <!-- Section - Estatísticas-->
+        <div id="login">
+            <div class="container-fluid p-0">
+                <div class="row g-0">
+                    <div class="col-lg-4 col-sm-6">
+                        <a class="services-box" href="/morador" title="Login - Morador"> <!-- Updated href for resident -->
+                            <img class="img-fluid" src="assets/img/morador.png" alt=""/>
+                            <div class="services-box-caption">
+                                <div class="project-category text-white-50">Você é</div>
+                                <div class="project-name">Morador</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-4 col-sm-6">
+                        <a class="services-box" href="/porteiro" title="Login - Porteiro"> <!-- Updated href for concierge -->
+                            <img class="img-fluid" src="assets/img/porteiro.png" alt="" />
+                            <div class="services-box-caption">
+                                <div class="project-category text-white-50">Você é</div>
+                                <div class="project-name">Porteiro</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-4 col-sm-6">
+                        <a class="services-box" href="/adm" title="Login - Administrador"> <!-- Updated href for admin -->
+                            <img class="img-fluid" src="assets/img/sindico.png" alt="" />
+                            <div class="services-box-caption">
+                                <div class="project-category text-white-50">Você é</div>
+                                <div class="project-name">Administrador</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section - Como Funciona-->
+        <section class="page-section" id="services">
             <div class="container px-4 px-lg-5">
                 <h2 class="text-dark text-center mt-0">COMO FUNCIONA?</h2>
                 <hr class="divider" />
@@ -103,7 +151,39 @@
                         </div>
                     </div>
                 </div>
-                <h2 class="text-dark text-center mt-6">CARACTERÍSTICAS</h2>
+            </div>
+        </section>
+
+        <!-- Section - Vídeo Prático-->
+        <section class="page-section">
+            <div class="container px-4 px-lg-5 text-center">
+                <div class="row gx-4 gx-lg-5 justify-content-center mt-3">
+                    <div class="col-lg-8 text-center">
+                        <h2 class="text-dark">VEJA COMO NOSSO SISTEMA FUNCIONA NA PRÁTICA:</h2>
+                        <hr class="divider divider-large" />
+                    </div>
+                </div>
+                <div class="row gx-4 gx-lg-5 justify-content-center mt-4">
+
+                    <!-- Depoimento 1 -->
+                    <div class="col-lg-5 col-md-6 mb-4">
+                        <div class="card h-100 text-center shadow">
+                            <div class="card-body">
+                                <img src="assets/img/Maria S.png" class="rounded-circle mb-3 costumer-img" alt="Maria S.">
+                                <h5 class="card-title">Maria S., Moradora</h5>
+                                <p class="card-text">"A Condologix mudou nossa rotina! Recebo minhas encomendas rapidamente e sem complicações."</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a class="btn btn-primary btn-xl mx-2" href="/teste-cadastro">Faça um teste você mesmo!</a> <!-- Updated href for testing page -->
+            </div>
+         </section>
+         
+         <!-- Section - Características-->
+        <section class="page-section" id="services">
+            <div class="container px-4 px-lg-5">
+                <h2 class="text-dark text-center mt-4">CARACTERÍSTICAS</h2>
                 <hr class="divider" />
                 <div class="row gx-4 gx-lg-5">
                     <div class="col-lg-3 col-md-6 text-center">
@@ -139,7 +219,7 @@
             </div>
         </section>
 
-        <!-- Section 3-->
+        <!-- Section - Sem/Com Condologix-->
         <section class="page-section"> 
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
@@ -167,36 +247,23 @@
             </div>            
         </section>
 
-        <!-- Section 4-->
-        <section class="page-section">
-            <div class="container px-4 px-lg-5 text-center">
-                <h1 class="text-dark">APROVEITE NOSSA OFERTA DE LANÇAMENTO:</h1>
-                <div class="row gx-4 gx-lg-5 justify-content-center mt-5">
-                    <!-- Plano 1 -->
-                    <div class="col-lg-6 col-md-6 mb-4">
-                        <div class="card h-100 text-center custom-card-height">
-                            <div class="card-body">
-                                <h5 class="card-title">Plano Lançamento</h5>
-                                <h6 class="card-price">R$ 497,00/mês</h6>
-                                <hr class="divider">
-                                <ul class="square-list my-4">
-                                    <li class="mr-0 py-2">Funcionalidades Limitadas</li>
-                                    <li class="mr-0 py-2">Suporte Básico</li>
-                                    <li class="mr-0 py-2">Sem Personalização</li>
-                                    <li class="mr-0 py-2">Limite de Armazenamento</li>
-                                </ul>
-                            </div>
-                            <div class="card-footer">
-                                <button class="btn btn-primary btn-xl my-2" onclick="">Assinar</button>
-                            </div>
-                        </div>
+        <!-- Section - Para Quem?-->
+        <section class="page-section bg-primary py-6" id="problems"> 
+            <div class="container px-4 px-lg-5">
+                <h2 class="text-white text-center mt-0">PARA QUEM É?</h2>
+                <hr class="divider divider-light" />
+                <div class="row gx-4 gx-lg-5 justify-content-center align-items-center">
+                    <div class="col-lg-6 text-center">
+                        <p class="text-white mt-4 mb-4 font-weight-bold-2">
+                            Condologix é ideal para condomínios residenciais que desejam modernizar e otimizar a gestão de pacotes, proporcionando notificações instantâneas e segurança aprimorada aos moradores.
+                        </p>
                     </div>
                 </div>
-            </div>            
+            </div>
         </section>
 
-        <!-- Section 5-->
-         <section class="page-section">
+        <!-- Section - Cases-->
+        <section class="page-section">
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center mt-3">
                     <div class="col-lg-8 text-center">
@@ -230,8 +297,35 @@
                 </div>
             </div>
          </section>
+
+        <!-- Section - Planos-->
+        <section class="page-section">
+            <div class="container px-4 px-lg-5 text-center">
+                <h1 class="text-dark">APROVEITE NOSSA OFERTA DE LANÇAMENTO:</h1>
+                <div class="row gx-4 gx-lg-5 justify-content-center mt-5">
+                    <!-- Plano 1 -->
+                    <div class="col-lg-6 col-md-6 mb-4">
+                        <div class="card h-100 text-center custom-card-height">
+                            <div class="card-body">
+                                <h3 class="card-title">Plano Lançamento</h3>
+                                <hr class="divider">
+                                <ul class="square-list my-4">
+                                    <li class="mr-0 py-2">Funcionalidades Limitadas</li>
+                                    <li class="mr-0 py-2">Suporte Básico</li>
+                                    <li class="mr-0 py-2">Sem Personalização</li>
+                                    <li class="mr-0 py-2">Limite de Armazenamento</li>
+                                </ul>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-primary btn-xl my-2" onclick="">Entre em Contato</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>            
+        </section>
       
-        <!-- Login-->
+        <!-- Section - Login-->
         <div id="login">
             <div class="container-fluid p-0">
                 <div class="row g-0">
@@ -266,7 +360,7 @@
             </div>
         </div>
 
-        <!-- Contact-->
+        <!-- Section - Dúvidas-->
         <section class="page-section" id="contact">
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">

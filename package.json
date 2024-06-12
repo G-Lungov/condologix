@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "tesseract.js": "^5.1.0",
+    "tesseract.js-node": "^0.1.0"
+  }
+}

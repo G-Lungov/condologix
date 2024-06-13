@@ -24,14 +24,14 @@
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top " id="mainNav">
         <div class="container px-4 px-lg-5">
-            <a class="navbar-brand" href="/">CONDOLOGIX</a> <!-- Updated href for root -->
+            <a class="navbar-brand" href="/">CONDOLOGIX</a>
             <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto my-2 my-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="/">HOME</a></li> <!-- Updated href for root -->
-                    <li class="nav-item"><a class="nav-link" href="/#problems">SERVIÇOS</a></li> <!-- Updated href for services section -->
-                    <li class="nav-item"><a class="nav-link" href="/login">LOGIN</a></li> <!-- Updated href for login -->
-                    <li class="nav-item"><a class="nav-link" href="/#contact">SUPORTE</a></li> <!-- Updated href for support section -->
+                    <li class="nav-item"><a class="nav-link" href="/">HOME</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/#problems">SERVIÇOS</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/login">LOGIN</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/#contact">SUPORTE</a></li>
                 </ul>
             </div>
         </div>
@@ -42,12 +42,12 @@
         <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
             <form id="contactForm" method="get">
                 <div class="container">
-                    <form action="" method="post" enctype="multipart/form-data">
+                    <form id="imageForm" action="" method="post" enctype="multipart/form-data">
                         <div class="mb-3">
-                            <input type="file" class="form-control" id="imagem" name="imagem" accept="image/*" capture="camera">
+                            <input type="file" class="form-control" id="imageInput" name="imagem" accept="image/*" capture="camera">
                         </div>
                         <div class="text-center">
-                            <button type="submit" class="btn btn-primary btn-xl-2 mt-3">Enviar Imagem</button>
+                            <button type="button" id="saveButton" class="btn btn-primary btn-xl-2 mt-3">Enviar Imagem</button>
                         </div>
                     </form>
                 </div>
@@ -56,24 +56,19 @@
                 <p class="text-center mb-5 text-uppercase">Cadastre Manualmente:</p>
 
                 <div class="form-floating mb-3 mx-auto">
-                    <input class="form-control" id="name" type="text" placeholder="" data-sb-validations="required" />
-                    <label for="Name">Nome completo</label>
+                    <input class="form-control" id="name" type="text" placeholder="Nome completo" data-sb-validations="required" />
+                    <label for="name">Nome completo</label>
                 </div>
-
+                
                 <div class="form-floating mb-3 mx-auto">
-                    <input class="form-control" id="endereco" type="text" placeholder="" data-sb-validations="required" />
-                    <label for="Address">Endereço</label>
+                    <input class="form-control" id="block" type="text" placeholder="Bloco" data-sb-validations="required" />
+                    <label for="block">Bloco</label>
                 </div>
-
+                
                 <div class="form-floating mb-3 mx-auto">
-                    <input class="form-control" id="apto" type="text" placeholder="" data-sb-validations="required" />
-                    <label for="Complemento">Apartamento</label>
-                </div>
-
-                <div class="form-floating mb-3 mx-auto">
-                    <input class="form-control" id="contactNumber" type="number" placeholder="011 98765 4321" data-sb-validations="required" />
-                    <label for="contactNumber">Número de contato</label>
-                </div>
+                    <input class="form-control" id="terminal" type="text" placeholder="Apartamento" data-sb-validations="required" />
+                    <label for="terminal">Apartamento</label>
+                </div>                
 
                 <div class="d-flex justify-content-center my-5">
                     <button class="btn btn-primary btn-xl" id="registerButton">Cadastrar</button>
@@ -96,7 +91,8 @@
     <!-- SimpleLightbox plugin JS-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/SimpleLightbox/2.1.0/simpleLightbox.min.js"></script>
     <!-- Core theme JS-->
-    <script src="js/script.js"></script>
+    <!-- <script src="js/script.js"></script> -->
+    <script src="js/scan/scan.js"></script>
     <script src="js/registerPackage.js"></script>
 </body>
 

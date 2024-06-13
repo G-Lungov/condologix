@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <title>Página Inicial - Morador</title>
+        <title>Histórico de Encomendas</title>
 
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
@@ -55,7 +55,7 @@
             <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
 
                 <!-- Navbar Brand-->
-                <a class="navbar-brand" href="/">CONDOLOGIX</a> <!-- Updated href for root -->
+                <a class="navbar-brand" href="index.html">CONDOLOGIX</a>
         
                 <!-- Navbar-->
                 <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
@@ -73,7 +73,7 @@
                     <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                         <div class="sb-sidenav-menu">
                             <div class="nav">
-                                <a class="nav-link" href="/">
+                                <a class="nav-link" href="index.html">
                                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                     Início
                                 </a>
@@ -96,60 +96,37 @@
     
                 <div id="layoutSidenav_content">
                     <main>
-                        <div class="container-fluid px-4">
-                            <h1 class="mt-4">Seja Bem-Vindo!</h1>
-                            <ol class="breadcrumb mb-4">
-                                <li class="breadcrumb-item active">O que deseja?</li>
-                            </ol>
-                            <div class="row">
-                                <div class="col-xl-3 col-md-6">
-                                    <div class="card bg-warning text-white mb-4">
-                                        <div class="card-body">Encomendas</div>
-                                        <div class="card-footer d-flex align-items-center justify-content-between">
-                                            <a class="small text-white stretched-link" href="histórico-encomendas.html">Ver Histórico</a>
-                                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-3 col-md-6">
-                                    <div class="card bg-success text-white mb-4">
-                                        <div class="card-body">Usuários do Apartamento</div>
-                                        <div class="card-footer d-flex align-items-center justify-content-between">
-                                            <a class="small text-white stretched-link" href="">Ver Todos</a>
-                                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-3 col-md-6">
-                                    <div class="card bg-danger text-white mb-4">
-                                        <div class="card-body">Atualizar Dados</div>
-                                        <div class="card-footer d-flex align-items-center justify-content-between">
-                                            <a class="small text-white stretched-link" href="">Acessar Formulário</a>
-                                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="container mt-5">
+                            <h2 class="text-center">Dados da Encomenda</h2>
+                            <table class="table table-striped table-bordered mt-3">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th scope="col">Nome do Destinatário</th>
+                                        <th scope="col">Remetente</th>
+                                        <th scope="col">Data de Recebimento</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="encomenda-body">
+                                    <!-- Dados da tabela serão inseridos aqui pelo JavaScript -->
+                                </tbody>
+                            </table>
                         </div>
                     </main>
     
                     <!-- Footer-->
                     <footer class="py-5">
-                        <div class="container px-4 px-lg-5">
-                            <div class="small text-center text-muted">
-                                <p>Copyrights &copy; 2024 All Rights Reserved by <a href="">WeDevelops</a></p>
-                            </div>
-                        </div>
+                        <div class="container px-4 px-lg-5"><div class="small text-center text-muted"><p>Copyrights &copy; 2024 All Rights Reserved by <a href="" class="">WeDevelops</a></p></div></div>
                     </footer>
                 </div>
             </div>
         </div>
         
+        
         <!-- SimpleLightbox plugin JS-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/SimpleLightbox/2.1.0/simpleLightbox.min.js"></script>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="js/script.js"></script>
+        <script src="js/script.js"></script> 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
         <script src="assets/demo/chart-area-demo.js"></script>
         <script src="assets/demo/chart-bar-demo.js"></script>

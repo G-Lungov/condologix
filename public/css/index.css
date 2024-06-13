@@ -2838,7 +2838,7 @@ textarea.form-control-lg {
   --bs-btn-hover-border-color: #c34e2e;
   --bs-btn-focus-shadow-rgb: 246, 122, 88;
   --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #866c4a;
+  --bs-btn-active-bg: #011236;
   --bs-btn-active-border-color: #b74a2c;
   --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --bs-btn-disabled-color: #fff;
@@ -8059,6 +8059,11 @@ textarea.form-control-lg {
   color: rgba(var(--bs-success-rgb), var(--bs-text-opacity)) !important;
 }
 
+.text-success-1 {
+  --bs-text-opacity: 0.8;
+  color: rgba(var(--bs-success-rgb), var(--bs-text-opacity)) !important;
+}
+
 .text-info {
   --bs-text-opacity: 1;
   color: rgba(var(--bs-info-rgb), var(--bs-text-opacity)) !important;
@@ -8071,6 +8076,11 @@ textarea.form-control-lg {
 
 .text-danger {
   --bs-text-opacity: 1;
+  color: rgba(var(--bs-danger-rgb), var(--bs-text-opacity)) !important;
+}
+
+.text-danger-1 {
+  --bs-text-opacity: 0.8;
   color: rgba(var(--bs-danger-rgb), var(--bs-text-opacity)) !important;
 }
 
@@ -10882,6 +10892,14 @@ hr.divider-light {
 
 hr.divider-large {
   max-width: 9rem;
+}
+
+hr.divider-red  {
+  background-color: #dc3545;
+}
+
+hr.divider-green  {
+  background-color: #198754;
 }
 
 

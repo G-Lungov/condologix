@@ -32,7 +32,7 @@
   --bs-danger: #dc3545;
   --bs-light: #f8f9fa;
   --bs-dark: #212529;
-  --bs-primary-rgb: 13, 110, 253;
+  --bs-primary-rgb: 3, 41, 121;
   --bs-secondary-rgb: 108, 117, 125;
   --bs-success-rgb: 25, 135, 84;
   --bs-info-rgb: 13, 202, 240;
@@ -8147,7 +8147,7 @@ textarea.form-control-lg {
 
 .bg-success {
   --bs-bg-opacity: 1;
-  background-color: #d3a871 !important;
+  background-color: #032979 !important;
 }
 
 .bg-info {
@@ -8157,12 +8157,12 @@ textarea.form-control-lg {
 
 .bg-warning {
   --bs-bg-opacity: 1;
-  background-color: #d3a871 !important;
+  background-color: #032979 !important;
 }
 
 .bg-danger {
   --bs-bg-opacity: 1;
-  background-color: #d3a871 !important;
+  background-color: #032979 !important;
 }
 
 .bg-light {
@@ -11013,7 +11013,7 @@ body {
 }
 
 .sb-sidenav-dark {
-  background-color: #C19A6B;
+  background-color: #032979;
   color: rgba(255, 255, 255, 0.5);
 }
 .sb-sidenav-dark .sb-sidenav-menu .sb-sidenav-menu-heading {
@@ -11038,11 +11038,11 @@ body {
   color: #fff;
 }
 .sb-sidenav-dark .sb-sidenav-footer {
-  background-color: #343a40;
+  background-color: #032979;
 }
 
 .sb-sidenav-light {
-  background-color: #f8f9fa;
+  background-color: #032979;
   color: #212529;
 }
 .sb-sidenav-light .sb-sidenav-menu .sb-sidenav-menu-heading {

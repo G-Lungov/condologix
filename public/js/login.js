@@ -3,7 +3,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     const USER_NAME_EMAIL = document.getElementById("userNameEmail").value;
     const USER_PASSWORD = document.getElementById("userPassword").value;
 
-    fetch('https://condologix.com/api/login', {
+    fetch('http://localhost:3000/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ USER_NAME_EMAIL, USER_PASSWORD })

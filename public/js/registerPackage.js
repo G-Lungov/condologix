@@ -13,7 +13,7 @@ window.addEventListener('DOMContentLoaded', event => {
         const recipientName = document.getElementById('name').value;
         const message = `Olá ${recipientName}, sua encomenda já chegou na portaria, favor apresentar o código a seguir para a retirada. Código: ${randomCode}. Até breve!`;
 
-        fetch('https://condologix.com/send-whatsapp', {
+        fetch('http://localhost:3000/send-whatsapp', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

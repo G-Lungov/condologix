@@ -191,5 +191,5 @@ app.post('/send-whatsapp', (req, res) => {
 //Start the server
 const PORT = process.env.PORT
 app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });

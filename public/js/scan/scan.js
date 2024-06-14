@@ -1,5 +1,3 @@
-import { createWorker } from 'tesseract.js';
-
 document.getElementById('saveButton').addEventListener('click', saveImage);
 
 // Function to save the image at sessionStorage

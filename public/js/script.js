@@ -7,9 +7,9 @@ window.addEventListener('DOMContentLoaded', event => {
 
     // Define allowed roles for each page
     const pageRoles = {
-        'adm': ['A'],        // Only administrators
-        'morador': ['R'],    // Only residents
-        'porteiro': ['C'],   // Only concierges
+        'administrator': ['A'], // Only administrators
+        'resident': ['R'],      // Only residents
+        'concierge': ['C'],     // Only concierges
     };
 
     // Check if the current page requires token verification
@@ -17,7 +17,7 @@ window.addEventListener('DOMContentLoaded', event => {
         // Check for token in localStorage
         const token = localStorage.getItem('token');
         if (!token) {
-            window.location.href = 'login';
+            window.location.href = '/login';
             return;
         }
 
@@ -45,7 +45,7 @@ window.addEventListener('DOMContentLoaded', event => {
         const decodedToken = parseJwt(token);
         if (!decodedToken) {
             alert('Invalid token. Please log in again.');
-            window.location.href = 'login';
+            window.location.href = '/login';
             return;
         }
 
@@ -55,7 +55,7 @@ window.addEventListener('DOMContentLoaded', event => {
         // Check if the user has access to the current page
         if (pageRoles[currentPage] && !pageRoles[currentPage].includes(userRole)) {
             alert('You do not have permission to access this page.');
-            window.location.href = 'login'; // Redirect to login page
+            window.location.href = '/login'; // Redirect to login page
             return;
         }
 
@@ -93,7 +93,7 @@ window.addEventListener('DOMContentLoaded', event => {
             console.error('Error fetching data:', error);
             alert('Error fetching data: ' + error.message); // Display a more descriptive error
             // Optionally redirect to login or an error page
-            window.location.href = 'login';
+            window.location.href = '/login';
         });
     } else {
         // Hide loading screen and show the main content if the page doesn't require token verification
@@ -167,13 +167,13 @@ function closePopup() {
 }
 
 function abrirAdm() {
-    window.location.href = 'adm';
+    window.location.href = 'https://condologix.com/login/administrator';
 }
 
 function abrirMorador() {
-    window.location.href = 'morador';
+    window.location.href = 'https://condologix.com/login/resident';
 }
 
 function abrirPorteiro() {
-    window.location.href = 'porteiro';
+    window.location.href = 'https://condologix.com/login/concierge';
 }

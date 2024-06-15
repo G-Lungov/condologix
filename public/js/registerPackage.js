@@ -35,7 +35,7 @@ window.addEventListener('DOMContentLoaded', event => {
                 } catch (error) {
                     console.error('Error decoding token:', error);
                     alert('Invalid token. Please log in again.');
-                    window.location.href = 'login'; // Redirect to login if token is invalid
+                    window.location.href = 'https://condologix.com/login/'; // Redirect to login if token is invalid
                     return;
                 }
             }
@@ -43,13 +43,13 @@ window.addEventListener('DOMContentLoaded', event => {
             let redirectUrl = '/'; // Default to index
             switch (userRole) {
                 case 'A':
-                    redirectUrl = '/adm';
+                    redirectUrl = 'https://condologix.com/login/administrator';
                     break;
                 case 'C':
-                    redirectUrl = '/porteiro';
+                    redirectUrl = 'https://condologix.com/login/concierge/';
                     break;
                 case 'R':
-                    redirectUrl = '/morador';
+                    redirectUrl = 'https://condologix.com/login/resident/';
                     break;
                 default:
                     alert('Role not recognized');

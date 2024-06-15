@@ -2846,16 +2846,33 @@ textarea.form-control-lg {
   --bs-btn-disabled-border-color: #032979;
 }
 
-.btn-secondary {
+.btn-primary-dark {
   --bs-btn-color: #fff;
-  --bs-btn-bg: #6c757d;
-  --bs-btn-border-color: #6c757d;
+  --bs-btn-bg: #011747;
+  --bs-btn-border-color: #011747;
   --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #5c636a;
-  --bs-btn-hover-border-color: #565e64;
-  --bs-btn-focus-shadow-rgb: 130, 138, 145;
+  --bs-btn-hover-bg: #030f29;
+  --bs-btn-hover-border-color: #c34e2e;
+  --bs-btn-focus-shadow-rgb: 246, 122, 88;
   --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #565e64;
+  --bs-btn-active-bg: #011236;
+  --bs-btn-active-border-color: #b74a2c;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #032979;
+  --bs-btn-disabled-border-color: #032979;
+}
+
+.btn-secondary {
+  --bs-btn-color: #032979;
+  --bs-btn-bg: #fff;
+  --bs-btn-border-color: #fff;
+  --bs-btn-hover-color: #032979;
+  --bs-btn-hover-bg: #dbdbdb;
+  --bs-btn-hover-border-color: #dbdbdb;
+  --bs-btn-focus-shadow-rgb: 130, 138, 145;
+  --bs-btn-active-color: #032979;
+  --bs-btn-active-bg: #bbbbbb;
   --bs-btn-active-border-color: #51585e;
   --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --bs-btn-disabled-color: #fff;
@@ -10932,17 +10949,17 @@ hr.divider-green  {
     background-color: transparent;
   }
   #mainNav .navbar-brand {
-    color: rgba(255, 255, 255, 0.7);
+    color: #212529;
   }
   #mainNav .navbar-brand:hover {
-    color: #fff;
+    color: #032979;
   }
   #mainNav .navbar-nav .nav-item .nav-link {
-    color: rgba(255, 255, 255, 0.7);
+    color:  #212529;
     padding: 0 1rem;
   }
   #mainNav .navbar-nav .nav-item .nav-link:hover {
-    color: #fff;
+    color: #032979;
   }
   #mainNav .navbar-nav .nav-item:last-child .nav-link {
     padding-right: 0;
@@ -10968,7 +10985,7 @@ hr.divider-green  {
 header.masthead {
   padding-top: 10rem;
   padding-bottom: calc(10rem - 4.5rem);
-  background: linear-gradient(to bottom, rgba(3, 41, 121, 0.4) 0%, rgba(3, 41, 121, 1) 100%), url("../assets/img/logo.jpg");
+  background: rgba(3, 41, 121, 1) 100%;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: scroll;

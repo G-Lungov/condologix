@@ -18,13 +18,13 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
             let redirectUrl = '';
             switch (data.role) {
                 case 'A':
-                    redirectUrl = 'adm'; // Admin page without .html
+                    redirectUrl = 'https://condologix.com/login/administrator'; // Admin page without .html
                     break;
                 case 'C':
-                    redirectUrl = 'porteiro'; // Concierge page without .html
+                    redirectUrl = 'https://condologix.com/login/concierge/'; // Concierge page without .html
                     break;
                 case 'R':
-                    redirectUrl = 'morador'; // Resident page without .html
+                    redirectUrl = 'https://condologix.com/login/resident/'; // Resident page without .html
                     break;
                 default:
                     alert('Role not recognized');

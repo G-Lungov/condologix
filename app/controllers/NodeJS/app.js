@@ -21,20 +21,21 @@ const app = express();
 app.use(express.json()); // To parse JSON bodies
 
 // Serve arquivos estáticos das pastas principais
-app.use(express.static(path.join(__dirname, '../../../')));
+app.use(express.static(path.join(__dirname, './')));
+app.use(express.static(path.join(__dirname, '../../public_html/')));
 
 // Serve arquivos estáticos das subpastas específicas
-app.use('/assets', express.static(path.join(__dirname, '../../../assets')));
-app.use('/css', express.static(path.join(__dirname, '../../../css')));
-app.use('/js', express.static(path.join(__dirname, '../../../js')));
+app.use('/css', express.static(path.join(__dirname, '../../public_html/css')));
+app.use('/assets', express.static(path.join(__dirname, '../../public_html/assets')));
 
 // Serve arquivos estáticos das páginas com subdiretórios
-app.use('/adm', express.static(path.join(__dirname, '../../../adm')));
-app.use('/history', express.static(path.join(__dirname, '../../../history')));
-app.use('/login', express.static(path.join(__dirname, '../../../login')));
-app.use('/morador', express.static(path.join(__dirname, '../../../morador')));
-app.use('/porteiro', express.static(path.join(__dirname, '../../../porteiro')));
-app.use('/teste-cadastro', express.static(path.join(__dirname, '../../../teste-cadastro')));
+app.use('/login', express.static(path.join(__dirname, '../../public_html/login')));
+app.use('/adm', express.static(path.join(__dirname, '../../public_html/login/administrator')));
+app.use('/morador', express.static(path.join(__dirname, '../../public_html/login/resident')));
+app.use('/porteiro', express.static(path.join(__dirname, '../../public_html/login/concierge')));
+app.use('/history', express.static(path.join(__dirname, '../../public_html/login/resident/history')));
+app.use('/history', express.static(path.join(__dirname, '../../public_html/login/administrator/history')));
+app.use('/teste-cadastro', express.static(path.join(__dirname, '../../public_html/login/concierge/register-package')));
 
 // Create a MySQL connection pool for the main database
 const mainDb = mysql.createPool({
@@ -138,32 +139,39 @@ function checkUserRole(allowedRoles) {
 
 // Admin page route (adm.html), accessible only by users with role 'A'
 app.get('/adm', verifyTokenAndConnect, checkUserRole(['A']), (req, res) => {
-  res.sendFile(path.join(__dirname, '../../../adm', 'index'));
+  res.sendFile(path.join(__dirname, '../../public_html/login/administrator', 'index'));
 });
 
 // Resident page route (morador.html), accessible only by users with role 'R'
 app.get('/morador', verifyTokenAndConnect, checkUserRole(['R']), (req, res) => {
-  res.sendFile(path.join(__dirname, '../../../morador', 'index'));
+  res.sendFile(path.join(__dirname, '../../public_html/login/resident', 'index'));
 });
 
 // Concierge page route (porteiro.html), accessible only by users with role 'C'
 app.get('/porteiro', verifyTokenAndConnect, checkUserRole(['C']), (req, res) => {
-  res.sendFile(path.join(__dirname, '../../../porteiro', 'index'));
+  res.sendFile(path.join(__dirname, '../../public_html/login/concierge', 'index'));
 });
 
 // History page route (history.html), accessible to all authenticated users
-app.get('/history', verifyTokenAndConnect, (req, res) => {
-  res.sendFile(path.join(__dirname, '../../../history', 'index'));
+app.get('/historic', verifyTokenAndConnect, (req, res) => {
+  req.userRole;
+  if (userRole == 'R') {
+    res.sendFile(path.join(__dirname, '../../public_html/login/resident/historic', 'index'));
+  } else if (userRole == 'A') {
+    res.sendFile(path.join(__dirname, '../../public_html/login/administrator/historic', 'index'));
+  } else {
+    res.status(403).send({ message: 'Access denied: insufficient permissions'})
+  }
 });
 
 // Test registration page route (teste-cadastro.html), accessible to all authenticated users
-app.get('/teste-cadastro', verifyTokenAndConnect, (req, res) => {
-  res.sendFile(path.join(__dirname, '../../../teste-cadastro', 'index'));
+app.get('/register-package', verifyTokenAndConnect, (req, res) => {
+  res.sendFile(path.join(__dirname, '../../public_html/login/concierge/register-package', 'index'));
 });
 
 // Default route for the main index page
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../../', 'index'));
+  res.sendFile(path.join(__dirname, '../../public_html/', 'index'));
 });
 
 // Protected route to fetch data from the user's specific database/schema

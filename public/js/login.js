@@ -3,7 +3,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     const USER_NAME_EMAIL = document.getElementById("userNameEmail").value;
     const USER_PASSWORD = document.getElementById("userPassword").value;
 
-    fetch('http://localhost:3000/api/login', {
+    fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ USER_NAME_EMAIL, USER_PASSWORD })
@@ -18,13 +18,13 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
             let redirectUrl = '';
             switch (data.role) {
                 case 'A':
-                    redirectUrl = 'https://condologix.com/login/administrator'; // Admin page without .html
+                    redirectUrl = '/login/administrator'; // Admin page without .html
                     break;
                 case 'C':
-                    redirectUrl = 'https://condologix.com/login/concierge/'; // Concierge page without .html
+                    redirectUrl = '/login/concierge/'; // Concierge page without .html
                     break;
                 case 'R':
-                    redirectUrl = 'https://condologix.com/login/resident/'; // Resident page without .html
+                    redirectUrl = '/login/resident/'; // Resident page without .html
                     break;
                 default:
                     alert('Role not recognized');

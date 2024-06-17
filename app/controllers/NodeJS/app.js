@@ -1,4 +1,3 @@
-// Import necessary modules
 const express = require('express');
 const mysql = require('mysql');
 const dotenv = require('dotenv');
@@ -6,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const path = require('path');
 const twilio = require('twilio');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
 // Load environment variables from .env file
 dotenv.config();
@@ -20,22 +20,28 @@ const client = twilio(accountSid, authToken);
 const app = express();
 app.use(express.json()); // To parse JSON bodies
 
-// Serve arquivos estáticos das pastas principais
+// Serve static files from the public directories
 app.use(express.static(path.join(__dirname, './')));
-app.use(express.static(path.join(__dirname, '../../public_html/')));
 
-// Serve arquivos estáticos das subpastas específicas
-app.use('/css', express.static(path.join(__dirname, '../../public_html/css')));
-app.use('/assets', express.static(path.join(__dirname, '../../public_html/assets')));
+// Serve specific static directories for subfolders
+app.use('/css', express.static(path.join(__dirname, './css')));
+app.use('/assets', express.static(path.join(__dirname, './assets')));
+app.use('/login', express.static(path.join(__dirname, './login')));
+app.use('/adm', express.static(path.join(__dirname, './login/administrator')));
+app.use('/morador', express.static(path.join(__dirname, './login/resident')));
+app.use('/porteiro', express.static(path.join(__dirname, './login/concierge')));
+app.use('/history', express.static(path.join(__dirname, './login/resident/history')));
+app.use('/history', express.static(path.join(__dirname, './login/administrator/history')));
+app.use('/teste-cadastro', express.static(path.join(__dirname, './login/concierge/register-package')));
 
-// Serve arquivos estáticos das páginas com subdiretórios
-app.use('/login', express.static(path.join(__dirname, '../../public_html/login')));
-app.use('/adm', express.static(path.join(__dirname, '../../public_html/login/administrator')));
-app.use('/morador', express.static(path.join(__dirname, '../../public_html/login/resident')));
-app.use('/porteiro', express.static(path.join(__dirname, '../../public_html/login/concierge')));
-app.use('/history', express.static(path.join(__dirname, '../../public_html/login/resident/history')));
-app.use('/history', express.static(path.join(__dirname, '../../public_html/login/administrator/history')));
-app.use('/teste-cadastro', express.static(path.join(__dirname, '../../public_html/login/concierge/register-package')));
+// Proxy all API requests to the Node.js server on port 3000
+app.use('/api', createProxyMiddleware({
+  target: 'http://localhost:3000',
+  changeOrigin: true,
+  pathRewrite: {
+    '^/api': '' // Remove the /api prefix when forwarding
+  }
+}));
 
 // Create a MySQL connection pool for the main database
 const mainDb = mysql.createPool({
@@ -139,39 +145,39 @@ function checkUserRole(allowedRoles) {
 
 // Admin page route (adm.html), accessible only by users with role 'A'
 app.get('/adm', verifyTokenAndConnect, checkUserRole(['A']), (req, res) => {
-  res.sendFile(path.join(__dirname, '../../public_html/login/administrator', 'index'));
+  res.sendFile(path.join(__dirname, './login/administrator', 'index.html'));
 });
 
 // Resident page route (morador.html), accessible only by users with role 'R'
 app.get('/morador', verifyTokenAndConnect, checkUserRole(['R']), (req, res) => {
-  res.sendFile(path.join(__dirname, '../../public_html/login/resident', 'index'));
+  res.sendFile(path.join(__dirname, './login/resident', 'index.html'));
 });
 
 // Concierge page route (porteiro.html), accessible only by users with role 'C'
 app.get('/porteiro', verifyTokenAndConnect, checkUserRole(['C']), (req, res) => {
-  res.sendFile(path.join(__dirname, '../../public_html/login/concierge', 'index'));
+  res.sendFile(path.join(__dirname, './login/concierge', 'index.html'));
 });
 
 // History page route (history.html), accessible to all authenticated users
 app.get('/historic', verifyTokenAndConnect, (req, res) => {
-  req.userRole;
+  const userRole = req.userRole;
   if (userRole == 'R') {
-    res.sendFile(path.join(__dirname, '../../public_html/login/resident/historic', 'index'));
+    res.sendFile(path.join(__dirname, './login/resident/history', 'index.html'));
   } else if (userRole == 'A') {
-    res.sendFile(path.join(__dirname, '../../public_html/login/administrator/historic', 'index'));
+    res.sendFile(path.join(__dirname, './login/administrator/history', 'index.html'));
   } else {
-    res.status(403).send({ message: 'Access denied: insufficient permissions'})
+    res.status(403).send({ message: 'Access denied: insufficient permissions' });
   }
 });
 
 // Test registration page route (teste-cadastro.html), accessible to all authenticated users
 app.get('/register-package', verifyTokenAndConnect, (req, res) => {
-  res.sendFile(path.join(__dirname, '../../public_html/login/concierge/register-package', 'index'));
+  res.sendFile(path.join(__dirname, './login/concierge/register-package', 'index.html'));
 });
 
 // Default route for the main index page
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../public_html/', 'index'));
+  res.sendFile(path.join(__dirname, './', 'index.html'));
 });
 
 // Protected route to fetch data from the user's specific database/schema
@@ -196,8 +202,8 @@ app.post('/send-whatsapp', (req, res) => {
   });
 });
 
-//Start the server
-const PORT = process.env.PORT
+// Start the server
+const PORT = process.env.PORT || 443;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

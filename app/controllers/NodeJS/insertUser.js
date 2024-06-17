@@ -38,4 +38,4 @@ const insertUser = async (username, password, role, userDb) => {
 };
 
 // Usage example
-insertUser('luciano@wedevelops.com', 'Massaro#2006_', 'A', '03059050LPQC');
+insertUser('', '', '', '');

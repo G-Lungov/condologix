@@ -1,16 +1,66 @@
+// <REQUIREMENTS> //
+// Dependencies
 const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 const mysql = require('mysql');
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const path = require('path');
 const twilio = require('twilio');
-const { createProxyMiddleware } = require('http-proxy-middleware');
 
+// Requiring routes
+const indexRouter = require('./routes/index');
+const tryItOutRouter = require('./routes/try-it-out');
+const loginRouter = require('./routes/login');
+const administratorRouter = require('./routes/administrator');
+const residentRouter = require('./routes/resident');
+const conciergeRouter = require('./routes/concierge');
+const registerRouter = require('./routes/register');
+const packageHistoricRouter = require('./routes/package-historic');
+const supportRouter = require('./routes/support');
+const updateDataRouter = require('./routes/update-data');
+// <REQUIREMENTS> //
+
+
+// <CONFIGURATION> //
 // Load environment variables from .env file
 dotenv.config();
 
-// Create a MySQL connection pool for the main database
+// Create Express application
+const app = express();
+
+// Set view engine
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
+// Middleware to interpret JSON in requests
+app.use(express.json());
+
+// Serve static files from 'public_html' directory
+app.use(express.static(path.join(__dirname)));
+
+// Middleware for logging
+app.use(logger('dev'));
+
+// Middleware to parse cookies from HTTP requests
+app.use(cookieParser());
+// <CONFIGURATION> //
+
+
+// <FUNCTIONS> //
+// Verify if passwords are equal
+const passwordIsValid = (password1, password2) => {
+  if (password1 === password2) {
+    console.log('Password is valid');
+    return true; // Passwords are equal
+  } else {
+    console.log('Invalid password');
+    return false; // Passwords are not equal
+  }
+};
+
+// Create a connection pool to the main database
 const mainDb = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -18,11 +68,12 @@ const mainDb = mysql.createPool({
   database: process.env.DB_NAME // Main database for user authentication
 });
 
-// Test the MySQL connection
+// Test the connection to MySQL
 mainDb.getConnection((err, connection) => {
   if (err) {
-  console.error('Error connecting to the database:', err);
-  return;
+    console.error('Error connecting to the database:', err.message);
+    console.error('Stack trace:', err.stack);
+    return;
   }
   console.log('Connected to the MySQL database.');
   connection.release();
@@ -33,196 +84,113 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const twiPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
 const client = twilio(accountSid, authToken);
+// <FUNCTIONS> //
 
-// Create an Express application
-const app = express();
-app.use(express.json()); // To parse JSON bodies
 
-// Proxy all API requests to the Node.js server on port 3000
-app.use('/api', createProxyMiddleware({
-  target: 'http://localhost:3000',
-  changeOrigin: true,
-  pathRewrite: {
-    '^/api': '' // Remove the /api prefix when forwarding
-  }
-}));
+// <MIDDLEWARES> //
+// <MIDDLEWARES> //
 
+
+// <ROUTES> //
+// Routes for non-token verified access
+app.use('/', indexRouter);
+app.use('/try-it-out', tryItOutRouter);
+app.use('/login', loginRouter);
+
+// Routes with role-based access control
+app.use('/administrator', administratorRouter);
+app.use('/concierge', conciergeRouter);
+app.use('/resident', residentRouter);
+app.use('/register', registerRouter);
+app.use('/package-historic', packageHistoricRouter);
+app.use('/support', supportRouter);
+app.use('/update-data', updateDataRouter);
+// <ROUTES> //
+
+
+// <ENDPOINTS> //
 // User login endpoint
-app.post('/api/login', (req, res) => {
+app.post('/login', (req, res) => {
   const { USER_NAME_EMAIL, USER_PASSWORD } = req.body;
-
+  console.log('Received login data:', req.body);
   console.log('Login request received for:', USER_NAME_EMAIL);
 
-  mainDb.getConnection((err, connection) => {
+  const sql = 'SELECT * FROM USERS WHERE USER_NAME_EMAIL = ?';
+  mainDb.query(sql, [USER_NAME_EMAIL], (err, results) => {
     if (err) {
-      console.error('Error getting connection from the pool:', err);
+      console.error('Error executing query:', err);
       return res.status(500).send('Error on the server.');
     }
+    if (results.length === 0) {
+      console.log('No user found for:', USER_NAME_EMAIL);
+      return res.status(404).send('No user found.');
+    }
+    const userMain = results[0];
+    console.log('User found:', userMain.USER_NAME_EMAIL);
 
-    const sql = 'SELECT * FROM USERS WHERE USER_NAME_EMAIL = ?';
-    connection.query(sql, [USER_NAME_EMAIL], (err, results) => {
-      connection.release(); // Release the connection back to the pool
-
-      if (err) {
-        console.error('Error executing query:', err);
-        return res.status(500).send('Error on the server.');
-      }
-      if (results.length === 0) {
-        console.log('No user found for:', USER_NAME_EMAIL);
-        return res.status(404).send('No user found.');
-      }
-
-      const user = results[0];
-      console.log('User found:', user);
-
-      const passwordIsValid = bcrypt.compareSync(USER_PASSWORD, user.USER_PASSWORD);
-      if (!passwordIsValid) {
-        console.log('Invalid password for user:', USER_NAME_EMAIL);
-        return res.status(401).send({ auth: false, token: null, message: 'Invalid password' });
-      }
-
+    // Validate password
+    if (passwordIsValid(USER_PASSWORD, userMain.USER_PASSWORD)) {
       // Generate JWT token
       const token = jwt.sign(
-        { id: user.ID_USER, role: user.USER_ROLE, database: user.USER_DB, schema: user.USER_SCHEMA },
+        { id: userMain.ID_USER, role: userMain.USER_ROLE, database: userMain.USER_DB },
         process.env.SECRET,
         { expiresIn: 86400 } // 24 hours
       );
-
       console.log('Login successful, token generated:', token);
 
-      res.status(200).send({ auth: true, token: token, role: user.USER_ROLE, database: user.USER_DB });
-    });
-  });
-});
-
-// Middleware to verify token and connect to the appropriate database/schema
-function verifyTokenAndConnect(req, res, next) {
-  const token = req.headers['x-access-token'];
-  if (!token) {
-    return res.status(403).send({ auth: false, message: 'No token provided.' });
-  }
-
-  jwt.verify(token, process.env.SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+      // Response in JSON
+      res.json({
+        auth: true,
+        token: token,
+        role: userMain.USER_ROLE
+      });
+      // Create a connection pool to the users database
+      const userDb = mysql.createPool({
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: userMain.USER_DB // User database for connection
+      });
+      // Test connection to the database
+      userDb.getConnection((err, connection) => {
+        if (err) {
+          console.error('Error connecting to the user\'s database:', err);
+          return res.status(500).send('Error connecting to the user\'s database');
+        }
+        console.log(`Successfully connected to the user's database: ${userMain.USER_DB}`);
+        connection.release();
+      });
+    } else {
+      console.log('Invalid password for user:', USER_NAME_EMAIL);
+      return res.status(401).json({
+        auth: false,
+        message: 'Invalid password'
+      });
     }
-
-    req.userId = decoded.id;
-    req.userRole = decoded.role;
-    req.userDatabase = decoded.database;
-
-    // Log the database name for debugging
-    console.log('Connecting to database:', req.userDatabase);
-
-    // Connect to the specific user's database/schema
-    req.userDb = mysql.createPool({
-      host: process.env.DB_HOST_CONDOMINUMS,
-      user: process.env.DB_USER_CONDOMINUMS,
-      password: process.env.DB_PASSWORD_CONDOMINUMS,
-      database: req.userDatabase // The specific database or schema name from the token
-    });
-
-    // Test the connection to the user's database
-    req.userDb.getConnection((err, connection) => {
-      if (err) {
-        console.error('Error connecting to the user\'s database:', err);
-        return res.status(500).send('Error connecting to the user\'s database');
-      }
-      console.log(`Successfully connected to the user's database: ${req.userDatabase}`);
-      connection.release();
-      next();
-    });
   });
-}
-
-// Middleware to check user role
-function checkUserRole(allowedRoles) {
-  return (req, res, next) => {
-    const userRole = req.userRole; // role set in the verifyTokenAndConnect middleware
-    if (!allowedRoles.includes(userRole)) {
-      return res.status(403).send({ message: 'Access denied: insufficient permissions' });
-    }
-    next();
-  };
-}
-
-// Serve static files from the public directories
-app.use(express.static(path.join(__dirname, './')));
-
-// Serve specific static directories for subfolders
-app.use('/css', express.static(path.join(__dirname, './css')));
-app.use('/assets', express.static(path.join(__dirname, './assets')));
-app.use('/login', express.static(path.join(__dirname, './login')));
-app.use('/adm', express.static(path.join(__dirname, './login/administrator')));
-app.use('/morador', express.static(path.join(__dirname, './login/resident')));
-app.use('/porteiro', express.static(path.join(__dirname, './login/concierge')));
-app.use('/history', express.static(path.join(__dirname, './login/resident/history')));
-app.use('/history', express.static(path.join(__dirname, './login/administrator/history')));
-app.use('/teste-cadastro', express.static(path.join(__dirname, './login/concierge/register-package')));
-
-// Routes with role-based access control
-
-// Admin page route (adm.html), accessible only by users with role 'A'
-app.get('/adm', verifyTokenAndConnect, checkUserRole(['A']), (req, res) => {
-  res.sendFile(path.join(__dirname, './login/administrator', 'index.html'));
-});
-
-// Resident page route (morador.html), accessible only by users with role 'R'
-app.get('/morador', verifyTokenAndConnect, checkUserRole(['R']), (req, res) => {
-  res.sendFile(path.join(__dirname, './login/resident', 'index.html'));
-});
-
-// Concierge page route (porteiro.html), accessible only by users with role 'C'
-app.get('/porteiro', verifyTokenAndConnect, checkUserRole(['C']), (req, res) => {
-  res.sendFile(path.join(__dirname, './login/concierge', 'index.html'));
-});
-
-// History page route (history.html), accessible to all authenticated users
-app.get('/historic', verifyTokenAndConnect, (req, res) => {
-  const userRole = req.userRole;
-  if (userRole == 'R') {
-    res.sendFile(path.join(__dirname, './login/resident/history', 'index.html'));
-  } else if (userRole == 'A') {
-    res.sendFile(path.join(__dirname, './login/administrator/history', 'index.html'));
-  } else {
-    res.status(403).send({ message: 'Access denied: insufficient permissions' });
-  }
-});
-
-// Test registration page route (teste-cadastro.html), accessible to all authenticated users
-app.get('/register-package', verifyTokenAndConnect, (req, res) => {
-  res.sendFile(path.join(__dirname, './login/concierge/register-package', 'index.html'));
-});
-
-// Default route for the main index page
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, './', 'index.html'));
-});
-
-// Protected route to fetch data from the user's specific database/schema
-app.get('/api/data', verifyTokenAndConnect, (req, res) => {
-  // Implement your logic to fetch data here, for now, we'll just send a success message
-  res.send('Data route accessed successfully.');
 });
 
 // Endpoint to send WhatsApp message
-app.post('/send-whatsapp', (req, res) => {
+app.post('/try-it-out', (req, res) => {
   const { to, message } = req.body;
 
   client.messages.create({
-    body: message,
-    from: `whatsapp:${twiPhoneNumber}`, // Ensure this is your approved Twilio WhatsApp number
-    to: `whatsapp:${to}` // Ensure the 'to' number is correctly formatted
+      body: message,
+      from: `whatsapp:${twiPhoneNumber}`,
+      to: `whatsapp:${to}`
   })
-  .then(message => res.status(200).send(`Message sent with SID: ${message.sid}`))
+  .then(message => {
+      console.log('Message sent:', message.sid);
+      res.status(200).send(`Message sent successfully to ${to}`);
+  })
   .catch(error => {
-    console.error('Twilio Error:', error);
-    res.status(500).send(error);
+      console.error('Twilio Error:', error);
+      res.status(500).send('Failed to send message');
   });
 });
 
-// Start the server
-const PORT = process.env.PORT;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// <ENDPOINTS> //
+
+
+// Export the Express application
+module.exports = app;

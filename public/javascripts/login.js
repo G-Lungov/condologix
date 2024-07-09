@@ -44,6 +44,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         case 'R':
                             redirectUrl = '/resident';
                             break;
+                        case 'S':
+                            redirectUrl = '/';
+                            break;
                         default:
                             alert('Role not recognized');
                             redirectUrl = 'https://condologix.com';

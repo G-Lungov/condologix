@@ -7,13 +7,13 @@ window.addEventListener('DOMContentLoaded', event => {
 
     // Define allowed roles for each page
     const pageRoles = {
-        'administrator': ['A'],         // Only administrators
-        'concierge': ['C'],             // Only concierges
-        'resident': ['R'],              // Only residents
-        'register': ['C'],              // Only concierges
-        'package-historic': ['A', 'R'], // Only administrators & residents
-        'support': ['A', 'R'],          // Only administrators & residents
-        'update-data': ['A', 'R'],      // Only administrators & residents
+        'administrator': ['A', 'S'],         // Only administrators
+        'concierge': ['C', 'S'],             // Only concierges
+        'resident': ['R', 'S'],              // Only residents
+        'register': ['C', 'S'],              // Only concierges
+        'package-historic': ['A', 'R', 'S'], // Only administrators & residents
+        'support': ['A', 'R', 'S'],          // Only administrators & residents
+        'update-data': ['A', 'R', 'S'],      // Only administrators & residents
     };
 
     // Check if the current page requires token verification
@@ -62,6 +62,7 @@ window.addEventListener('DOMContentLoaded', event => {
         const mainContent = document.getElementById('mainContent');
         if (loadingScreen) loadingScreen.style.display = 'none';
         if (mainContent) mainContent.style.display = 'block';
+        
     } else {
         // Hide loading screen and show the main content if the page doesn't require token verification
         const loadingScreen = document.getElementById('loadingScreen');

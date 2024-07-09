@@ -84,6 +84,23 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const twiPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
 const client = twilio(accountSid, authToken);
+
+// Format date to DD/MM/YYYY
+function formatDate(date) {
+  const d = new Date(date);
+  let day = d.getDate();
+  let month = d.getMonth() + 1; // Mês começa em 0
+  const year = d.getFullYear();
+
+  if (day < 10) {
+    day = '0' + day;
+  }
+  if (month < 10) {
+    month = '0' + month;
+  }
+
+  return `${day}/${month}/${year}`;
+}
 // <FUNCTIONS> //
 
 
@@ -109,7 +126,7 @@ app.use('/update-data', updateDataRouter);
 
 
 // <ENDPOINTS> //
-// User login endpoint
+// User login
 app.post('/login', (req, res) => {
   const { USER_NAME_EMAIL, USER_PASSWORD } = req.body;
   console.log('Received login data:', req.body);
@@ -132,7 +149,7 @@ app.post('/login', (req, res) => {
     if (passwordIsValid(USER_PASSWORD, userMain.USER_PASSWORD)) {
       // Generate JWT token
       const token = jwt.sign(
-        { id: userMain.ID_USER, role: userMain.USER_ROLE, database: userMain.USER_DB },
+        { id: userMain.ID_USER, role: userMain.USER_ROLE, database: userMain.USER_DB, email: userMain.USER_NAME_EMAIL },
         process.env.SECRET,
         { expiresIn: 86400 } // 24 hours
       );
@@ -170,7 +187,70 @@ app.post('/login', (req, res) => {
   });
 });
 
-// Endpoint to send WhatsApp message
+// Post package
+app.post('/register', (req, res) => {
+  const newPackageData = req.body;
+  const userDb = mysql.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: jsonData.database
+  });
+  const query = `INSERT INTO PACKAGE (PACKAGE_SENDER_NAME, PACKAGE_ARRIVAL_DATE, PACKAGE_SCAN, USER_NAME_EMAIL, ID_TEMRINAL, ID_RESIDENT, ID_CONCIERGE) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+  const dataToInsert = []
+  userDb.query(query, dataToInsert, (error, results) => {
+    if (error) {
+      console.error('Error inserting data: ', error);
+      return res.status(500).send('Error inserting data');
+    } else {
+      res.status(201).send('Package registered succesfully');
+    }
+  });
+});
+
+// Get package historic
+app.post('/package-historic', (req, res) => {
+  const jsonData = req.body;
+  const userDb = mysql.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: jsonData.database 
+  });
+  const query = `
+  SELECT
+    p.ID_PACKAGE,
+    p.PACKAGE_SENDER_NAME,
+    p.PACKAGE_ARRIVAL_DATE,
+    p.PACKAGE_PICKUP_DATE,
+    c.CONCIERGE_NAME
+  FROM
+    PACKAGE p
+  JOIN
+    CONCIERGE c
+  ON
+    p.ID_CONCIERGE = c.ID_CONCIERGE
+  WHERE
+    p.USER_NAME_EMAIL = ?
+  `;
+  userDb.query(query, [jsonData.email], (error, results) => {
+    if (error) {
+      console.error('Error fetching package historic: ', error);
+      res.status(500).send('Internal Server Error');
+    } else {
+      const formattedResults = results.map(item => {
+        return {
+          ...item,
+          PACKAGE_ARRIVAL_DATE: formatDate(item.PACKAGE_ARRIVAL_DATE),
+          PACKAGE_PICKUP_DATE: formatDate(item.PACKAGE_PICKUP_DATE)
+        };
+      });
+      res.json(formattedResults);
+    }
+  });
+});
+
+// To send WhatsApp message (Test page)
 app.post('/try-it-out', (req, res) => {
   const { to, message } = req.body;
 
@@ -192,5 +272,5 @@ app.post('/try-it-out', (req, res) => {
 // <ENDPOINTS> //
 
 
-// Export the Express application
+// Export the Express application and Router
 module.exports = app;

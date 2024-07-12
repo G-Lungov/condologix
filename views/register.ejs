@@ -20,6 +20,7 @@
     <link href="../public/stylesheets/forms.css" rel="stylesheet" />
     <!-- Core theme JS -->
     <script src="../public/javascripts/script.js"></script>
+    <script src="../public/javascripts/registerPackage.js"></script>
 </head>
 
 <body>
@@ -53,28 +54,27 @@
                         </div>
                     </form>
                 </div>
-
                 <p class="text-center mb-4 mt-4 text-uppercase">ou</p>
                 <p class="text-center mb-5 text-uppercase">Cadastre Manualmente:</p>
-
                 <div class="form-floating mb-3 mx-auto">
-                    <input class="form-control" id="name" type="text" placeholder="Nome completo" data-sb-validations="required" />
-                    <label for="name">Nome completo</label>
+                    <input class="form-control" id="residentName" type="text" placeholder="Nome completo" data-sb-validations="required" />
+                    <label for="residentName">Nome completo</label>
                 </div>
-                
                 <div class="form-floating mb-3 mx-auto">
-                    <input class="form-control" id="block" type="text" placeholder="Bloco" data-sb-validations="required" />
-                    <label for="block">Bloco</label>
+                    <select class="form-select" id="terminalBlock" data-sb-validations="required">
+                        <option value="">Selecione o Bloco</option>
+                    </select>
+                    <label for="terminalBlock">Bloco</label>
                 </div>
-                
                 <div class="form-floating mb-3 mx-auto">
-                    <input class="form-control" id="terminal" type="text" placeholder="Apartamento" data-sb-validations="required" />
-                    <label for="terminal">Apartamento</label>
-                </div>                
-
+                    <select class="form-select" id="terminalNumber" data-sb-validations="required">
+                        <option value="">Selecione o Apartamento</option>
+                    </select>
+                    <label for="terminalNumber">Apartamento</label>
+                </div>
                 <div class="d-flex justify-content-center my-5">
-                    <button class="btn btn-primary btn-xl" id="registerButton">Cadastrar</button>
-                </div>
+                    <button class="btn btn-primary btn-xl" id="registerButton" type="submit">Cadastrar</button>
+                </div>                
             </form>
         </div>
     </div>
@@ -94,6 +94,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/SimpleLightbox/2.1.0/simpleLightbox.min.js"></script>
     <!-- Core theme JS-->
     <script src="../public/javascripts/scan.js"></script>
-    <script src="../public/javascripts/registerPackage.js"></script>
 </body>
 </html>

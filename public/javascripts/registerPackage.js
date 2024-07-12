@@ -1,69 +1,114 @@
-window.addEventListener('DOMContentLoaded', event => {
-    // Function to generate a random 4-digit number
-    function generateRandomFourDigitNumber() {
-        return Math.floor(1000 + Math.random() * 9000);
+// Check for token in localStorage
+const token = localStorage.getItem('token');
+if (!token) {
+    window.location.href = 'https://condologix.com/login';
+}
+
+// Decode the JWT token to get user information
+function parseJwt(token) {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+    } catch (error) {
+        console.error('Error parsing token:', error);
+        return null;
+    }
+}
+
+const decodedToken = parseJwt(token);
+if (!decodedToken) {
+    alert('Invalid token. Please log in again.');
+    window.location.href = 'https://condologix.com/login';
+}
+
+const userDb = decodedToken.database;
+const userId = decodedToken.id;
+
+document.addEventListener('DOMContentLoaded', () => {
+    const residentNameInput = document.getElementById('residentName');
+    const terminalBlockSelect = document.getElementById('terminalBlock');
+    const terminalNumberSelect = document.getElementById('terminalNumber');
+    const registerButton = document.getElementById('registerButton');
+
+    // Função para preencher os dropdowns com os dados do banco de dados
+    function populateFormData() {
+        const jsonData = {
+            database: userDb
+        };
+
+        fetch('/register-data', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify(jsonData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Preencher nomes dos residentes
+            residentNameInput.innerHTML = '<option value="">Selecione o Nome do Residente</option>';
+            data.residents.forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                residentNameInput.appendChild(option);
+            });
+
+            // Preencher blocos
+            terminalBlockSelect.innerHTML = '<option value="">Selecione o Bloco</option>';
+            for (const block in data.blocks) {
+                const option = document.createElement('option');
+                option.value = block;
+                option.textContent = block;
+                terminalBlockSelect.appendChild(option);
+            }
+
+            // Atualizar apartamentos com base no bloco selecionado
+            terminalBlockSelect.addEventListener('change', () => {
+                const selectedBlock = terminalBlockSelect.value;
+                terminalNumberSelect.innerHTML = '<option value="">Selecione o Apartamento</option>';
+                if (selectedBlock && data.blocks[selectedBlock]) {
+                    data.blocks[selectedBlock].forEach(apartment => {
+                        const option = document.createElement('option');
+                        option.value = apartment;
+                        option.textContent = apartment;
+                        terminalNumberSelect.appendChild(option);
+                    });
+                }
+            });
+        })
+        .catch(error => console.error('Error fetching form data: ', error));
     }
 
-    // Send message to the resident
-    document.getElementById('contactForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+    // Função para enviar o formulário
+    registerButton.addEventListener('click', (event) => {
+        event.preventDefault();
+        const jsonData = {
+            residentName: residentNameInput.value,
+            block: terminalBlockSelect.value,
+            apartment: terminalNumberSelect.value,
+            id: userId,
+            database: userDb
+        };
 
-        const randomCode = generateRandomFourDigitNumber();
-        const phoneNumber = document.getElementById('contactNumber').value;
-        const recipientName = document.getElementById('name').value;
-        const message = `Olá ${recipientName}, sua encomenda já chegou na portaria, favor apresentar o código a seguir para a retirada. Código: ${randomCode}. Até breve!`;
-
-        fetch('/send-whatsapp', {
+        fetch('/register', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ to: phoneNumber, message: message })
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify(jsonData)
         })
-        .then(response => response.text())
-        .then(data => {
-            alert(data);
-
-            // Fetch the token from local storage
-            const token = localStorage.getItem('token');
-            let userRole = null;
-
-            if (token) {
-                try {
-                    const decodedToken = JSON.parse(atob(token.split('.')[1]));
-                    userRole = decodedToken.role;
-                } catch (error) {
-                    console.error('Error decoding token:', error);
-                    alert('Invalid token. Please log in again.');
-                    window.location.href = 'https://condologix.com/login/'; // Redirect to login if token is invalid
-                    return;
-                }
+        .then(response => {
+            if (response.ok) {
+                alert('Pacote cadastrado com sucesso!');
+                location.reload();
+            } else {
+                alert('Erro ao cadastrar pacote.');
             }
-
-            let redirectUrl = '/'; // Default to index
-            switch (userRole) {
-                case 'A':
-                    redirectUrl = 'https://condologix.com/administrator';
-                    break;
-                case 'C':
-                    redirectUrl = 'https://condologix.com/concierge/';
-                    break;
-                case 'R':
-                    redirectUrl = 'https://condologix.com/resident/';
-                    break;
-                default:
-                    alert('Role not recognized');
-                    return;
-            }
-            window.location.href = redirectUrl;
         })
-        .catch(error => alert('Error: ' + error));
+        .catch(error => console.error('Error registering package: ', error));
     });
 
-    const registerButton = document.getElementById('registerButton');
-    if (registerButton) {
-        registerButton.addEventListener('click', function(e) {
-            document.getElementById('contactForm').dispatchEvent(new Event('submit'));
-        });
-    }
+    // Preencher os dropdowns ao carregar a página
+    populateFormData();
 });

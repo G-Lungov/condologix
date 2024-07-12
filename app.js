@@ -75,7 +75,7 @@ mainDb.getConnection((err, connection) => {
     console.error('Stack trace:', err.stack);
     return;
   }
-  console.log('Connected to the MySQL database.');
+  console.log('MySQL database working correctly.');
   connection.release();
 });
 
@@ -119,6 +119,7 @@ app.use('/administrator', administratorRouter);
 app.use('/concierge', conciergeRouter);
 app.use('/resident', residentRouter);
 app.use('/register', registerRouter);
+
 app.use('/package-historic', packageHistoricRouter);
 app.use('/support', supportRouter);
 app.use('/update-data', updateDataRouter);
@@ -147,20 +148,6 @@ app.post('/login', (req, res) => {
 
     // Validate password
     if (passwordIsValid(USER_PASSWORD, userMain.USER_PASSWORD)) {
-      // Generate JWT token
-      const token = jwt.sign(
-        { id: userMain.ID_USER, role: userMain.USER_ROLE, database: userMain.USER_DB, email: userMain.USER_NAME_EMAIL },
-        process.env.SECRET,
-        { expiresIn: 86400 } // 24 hours
-      );
-      console.log('Login successful, token generated:', token);
-
-      // Response in JSON
-      res.json({
-        auth: true,
-        token: token,
-        role: userMain.USER_ROLE
-      });
       // Create a connection pool to the users database
       const userDb = mysql.createPool({
         host: process.env.DB_HOST,
@@ -168,6 +155,7 @@ app.post('/login', (req, res) => {
         password: process.env.DB_PASSWORD,
         database: userMain.USER_DB // User database for connection
       });
+
       // Test connection to the database
       userDb.getConnection((err, connection) => {
         if (err) {
@@ -176,6 +164,35 @@ app.post('/login', (req, res) => {
         }
         console.log(`Successfully connected to the user's database: ${userMain.USER_DB}`);
         connection.release();
+
+        const query = `SELECT * FROM USERS WHERE USER_NAME_EMAIL = ?`;
+        userDb.query(query, [userMain.USER_NAME_EMAIL], (err, results) => {
+          if (err) {
+            console.error('Error executing query:', err);
+            return res.status(500).send('Error on the server.');
+          }
+          if (results.length === 0) {
+            console.log('No user found for:', userMain.USER_NAME_EMAIL);
+            return res.status(404).send('No user found.');
+          }
+
+          const userData = results[0];
+
+          // Generate JWT token
+          const token = jwt.sign(
+            { id: userData.ID_USER, role: userMain.USER_ROLE, database: userMain.USER_DB, email: userData.USER_NAME_EMAIL },
+            process.env.SECRET,
+            { expiresIn: 86400 } // 24 hours
+          );
+          console.log('Login successful, token generated:', token);
+
+          // Response in JSON
+          return res.json({
+            auth: true,
+            token: token,
+            role: userMain.USER_ROLE
+          });
+        });
       });
     } else {
       console.log('Invalid password for user:', USER_NAME_EMAIL);
@@ -187,23 +204,96 @@ app.post('/login', (req, res) => {
   });
 });
 
-// Post package
-app.post('/register', (req, res) => {
-  const newPackageData = req.body;
+// Get data to register page
+app.post('/register-data', (req, res) => {
+  const jsonData = req.body
   const userDb = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: jsonData.database
   });
-  const query = `INSERT INTO PACKAGE (PACKAGE_SENDER_NAME, PACKAGE_ARRIVAL_DATE, PACKAGE_SCAN, USER_NAME_EMAIL, ID_TEMRINAL, ID_RESIDENT, ID_CONCIERGE) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-  const dataToInsert = []
-  userDb.query(query, dataToInsert, (error, results) => {
+  const query = `
+    SELECT RESIDENT_NAME, TERMINAL_BLOCK, TERMINAL_NUMBER 
+    FROM RESIDENT
+  `;
+
+  userDb.query(query, (error, results) => {
     if (error) {
-      console.error('Error inserting data: ', error);
-      return res.status(500).send('Error inserting data');
+      console.error('Error fetching resident data: ', error);
+      return res.status(500).send('Error fetching resident data');
     } else {
-      res.status(201).send('Package registered succesfully');
+      // Format the data to group apartments by block
+      const data = {
+        residents: [],
+        blocks: {},
+      };
+
+      results.forEach(row => {
+        data.residents.push(row.RESIDENT_NAME);
+
+        if (!data.blocks[row.TERMINAL_BLOCK]) {
+          data.blocks[row.TERMINAL_BLOCK] = [];
+        }
+        data.blocks[row.TERMINAL_BLOCK].push(row.TERMINAL_NUMBER);
+      });
+
+      res.json(data);
+    }
+  });
+});
+
+// Register new package
+app.post('/register', (req, res) => {
+  const jsonData = req.body;
+
+  const userDb = mysql.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: jsonData.database
+  });
+
+  const findResidentId = `
+    SELECT ID_RESIDENT FROM RESIDENT 
+    WHERE RESIDENT_NAME = ? AND TERMINAL_BLOCK = ? AND TERMINAL_NUMBER = ?
+  `;
+  const findConciergeId = `
+  SELECT ID_CONCIERGE FROM CONCIERGE 
+  WHERE ID_USER = ?
+  `;
+
+  userDb.query(findResidentId, [jsonData.residentName, jsonData.block, jsonData.apartment], (error, results) => {
+    if (error) {
+      console.error('Error finding resident: ', error);
+      return res.status(500).send('Error finding resident');
+    } else if (results.length === 0) {
+      return res.status(404).send('Resident not found');
+    } else {
+      const residentId = results[0].ID_RESIDENT;
+      userDb.query(findConciergeId, [jsonData.id], (error, results) => {
+        if (error) {
+          console.error('Error finding concierge: ', error);
+          return res.status(500).send('Error finding concierge');
+        } else if (results.length === 0) {
+          return res.status(404).send('Concierge not found');
+        } else {
+          const conciergeId = results[0].ID_CONCIERGE;
+          const insertPackageQuery = `
+            INSERT INTO PACKAGE (PACKAGE_SENDER_NAME, PACKAGE_ARRIVAL_DATE, ID_RESIDENT, ID_CONCIERGE) 
+            VALUES (?, NOW(), ?, ?)
+          `;
+          const dataToInsert = ['Remetente', residentId, conciergeId]; // Adjust as necessary
+          userDb.query(insertPackageQuery, dataToInsert, (error, results) => {
+            if (error) {
+              console.error('Error inserting data: ', error);
+              return res.status(500).send('Error inserting data');
+            } else {
+              res.status(201).send('Package registered successfully');
+            }
+          });
+        }
+      });
     }
   });
 });

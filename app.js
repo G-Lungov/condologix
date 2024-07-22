@@ -307,35 +307,47 @@ app.post('/package-historic', (req, res) => {
     password: process.env.DB_PASSWORD,
     database: jsonData.database 
   });
-  const query = `
-  SELECT
-    p.ID_PACKAGE,
-    p.PACKAGE_SENDER_NAME,
-    p.PACKAGE_ARRIVAL_DATE,
-    p.PACKAGE_PICKUP_DATE,
-    c.CONCIERGE_NAME
-  FROM
-    PACKAGE p
-  JOIN
-    CONCIERGE c
-  ON
-    p.ID_CONCIERGE = c.ID_CONCIERGE
-  WHERE
-    p.USER_NAME_EMAIL = ?
-  `;
-  userDb.query(query, [jsonData.email], (error, results) => {
+  const findResidentId = `SELECT ID_RESIDENT FROM RESIDENT WHERE ID_USER = ?`;
+  userDb.query(findResidentId, [jsonData.id], (error, results) => {
     if (error) {
-      console.error('Error fetching package historic: ', error);
-      res.status(500).send('Internal Server Error');
+      console.error('Error finding resident: ', error);
+      return res.status(500).send('Error finding resident');
+    } else if (results.length === 0) {
+      return res.status(404).send('Resident not found');
     } else {
-      const formattedResults = results.map(item => {
-        return {
-          ...item,
-          PACKAGE_ARRIVAL_DATE: formatDate(item.PACKAGE_ARRIVAL_DATE),
-          PACKAGE_PICKUP_DATE: formatDate(item.PACKAGE_PICKUP_DATE)
-        };
+      const residentId = results[0].ID_RESIDENT;
+      const query = `
+      SELECT
+        p.ID_PACKAGE,
+        p.PACKAGE_SENDER_NAME,
+        p.PACKAGE_ARRIVAL_DATE,
+        c.CONCIERGE_NAME
+      FROM
+        PACKAGE p
+      JOIN
+        CONCIERGE c,
+        RESIDENT r
+      ON
+        p.ID_CONCIERGE = c.ID_CONCIERGE,
+        p.ID_RESIDENT = r.ID_RESIDENT
+      WHERE
+        p.ID_RESIDENT = ?
+      `;
+      userDb.query(query, [residentId], (error, results) => {
+        if (error) {
+          console.error('Error fetching package historic: ', error);
+          res.status(500).send('Internal Server Error');
+        } else {
+          const formattedResults = results.map(item => {
+            return {
+              ...item,
+              PACKAGE_ARRIVAL_DATE: formatDate(item.PACKAGE_ARRIVAL_DATE),
+              PACKAGE_PICKUP_DATE: formatDate(item.PACKAGE_PICKUP_DATE)
+            };
+          });
+          res.json(formattedResults);
+        }
       });
-      res.json(formattedResults);
     }
   });
 });

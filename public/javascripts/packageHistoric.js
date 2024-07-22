@@ -25,14 +25,11 @@ if (!decodedToken) {
     window.location.href = 'https://condologix.com/login';
 }
 
-const userMail = decodedToken.email;
 const userDb = decodedToken.database;
-console.log('User email: ', userMail);
 console.log('User database: ', userDb);
 
 function fetchPackageContent() {
     const jsonData = {
-        email: userMail,
         database: userDb
     };
     fetch('/package-historic', {
@@ -57,7 +54,6 @@ function displayPackageContent(data) {
         'ID_PACKAGE': 'Nº Pacote',
         'PACKAGE_SENDER_NAME': 'Remetente',
         'PACKAGE_ARRIVAL_DATE': 'Chegada',
-        'PACKAGE_PICKUP_DATE': 'Retirada',
         'CONCIERGE_NAME': 'Porteiro(a)'
     };
 

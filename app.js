@@ -7,7 +7,6 @@ const logger = require('morgan');
 const mysql = require('mysql');
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
-const twilio = require('twilio');
 
 // Requiring routes
 const indexRouter = require('./routes/index');
@@ -79,11 +78,6 @@ mainDb.getConnection((err, connection) => {
   connection.release();
 });
 
-// Twilio credentials
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-const twiPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
-const client = twilio(accountSid, authToken);
 
 // Format date to DD/MM/YYYY
 function formatDate(date) {
@@ -352,23 +346,12 @@ app.post('/package-historic', (req, res) => {
   });
 });
 
-// To send WhatsApp message (Test page)
+// To send WhatsApp message (Test page) - Will be replaced with WhatsApp Web API
 app.post('/try-it-out', (req, res) => {
   const { to, message } = req.body;
-
-  client.messages.create({
-      body: message,
-      from: `whatsapp:${twiPhoneNumber}`,
-      to: `whatsapp:${to}`
-  })
-  .then(message => {
-      console.log('Message sent:', message.sid);
-      res.status(200).send(`Message sent successfully to ${to}`);
-  })
-  .catch(error => {
-      console.error('Twilio Error:', error);
-      res.status(500).send('Failed to send message');
-  });
+  
+  // TODO: Implement WhatsApp Web API integration
+  res.status(501).send('WhatsApp Web API integration pending');
 });
 
 // <ENDPOINTS> //

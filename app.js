@@ -19,6 +19,7 @@ const registerRouter = require('./routes/register');
 const packageHistoricRouter = require('./routes/package-historic');
 const supportRouter = require('./routes/support');
 const updateDataRouter = require('./routes/update-data');
+const WhatsAppService = require('./services/whatsappService');
 // <REQUIREMENTS> //
 
 
@@ -48,6 +49,13 @@ app.use(cookieParser());
 
 
 // <FUNCTIONS> //
+
+// Initialize WhatsApp service
+const whatsAppService = new WhatsAppService();
+whatsAppService.initialize().catch(error => {
+  console.error('Failed to initialize WhatsApp service:', error);
+});
+
 // Verify if passwords are equal
 const passwordIsValid = (password1, password2) => {
   if (password1 === password2) {
@@ -347,11 +355,20 @@ app.post('/package-historic', (req, res) => {
 });
 
 // To send WhatsApp message (Test page) - Will be replaced with WhatsApp Web API
-app.post('/try-it-out', (req, res) => {
-  const { to, message } = req.body;
-  
-  // TODO: Implement WhatsApp Web API integration
-  res.status(501).send('WhatsApp Web API integration pending');
+app.post('/try-it-out', async (req, res) => {
+  const { to, message } =req.body;
+
+  try{
+    if(!whatsAppService.isClientReady()) {
+      return res.status(503).send('WhatsApp client is not ready. Please scan QR Code first.');
+    }
+
+    const result = await whatsAppService.sendMessage(to, message);
+    res.status(200).send(`Message sent succesfully to ${to}. Message ID: ${result.messageId}`);
+  } catch (error) {
+    console.error('WhatsApp Error:', error);
+    res.status(500).send(`Failed to send message: ${error.message}`);
+  }
 });
 
 // <ENDPOINTS> //

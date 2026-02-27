@@ -1,11 +1,10 @@
 package com.condologix.application.payment;
 
+import com.condologix.application.building.*;
 import lombok.*;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import com.condologix.application.building.*;
 
 @Entity
 @Table(name = "payments")
@@ -22,6 +21,9 @@ public class PaymentModel {
     @ManyToOne(optional = false)
     @JoinColumn(name = "BUILDING_ID", nullable = false)
     private BuildingModel building;
+
+    @ManyToOne(optional = false)
+    private PaymentBillingPolicy billingPolicy;
 
     @Column(name = "ORDER_ID", nullable = false)
     private Long orderId;
@@ -49,7 +51,6 @@ public class PaymentModel {
 
     // Constructors - Start
     public PaymentModel(BuildingModel building, Long orderId, BigDecimal amount, PaymentMethod paymentMethod, LocalDate dueDate) {
-
         if (building == null) {
             throw new IllegalArgumentException("Building cannot be null");
         }
@@ -59,7 +60,6 @@ public class PaymentModel {
         if (dueDate == null || dueDate.isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("Due date must be in the future");
         }
-
         this.building = building;
         this.orderId = orderId;
         this.amount = amount;
@@ -72,10 +72,9 @@ public class PaymentModel {
 
     // Business rules - Start
     public void markAsPaid() {
-        if (this.status == PaymentStatus.PAID) {
-            throw new IllegalArgumentException("Payment is already marked as paid");
+        if (status != PaymentStatus.PENDING) {
+            throw new IllegalArgumentException("Payment is already paid, only pending payments can be paid");
         }
-
         this.status = PaymentStatus.PAID;
         this.paidAt = LocalDate.now();
     }
@@ -83,25 +82,8 @@ public class PaymentModel {
     public boolean isOverdue() {
         return LocalDate.now().isAfter(dueDate) && status != PaymentStatus.PAID;
     }
-
-    public BigDecimal calculateInterest(BigDecimal dailyRate) {
-
-        if (status == PaymentStatus.PAID) {
-            return BigDecimal.ZERO;
-        }
-        if (dailyRate == null || dailyRate.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Daily rate must be positive");
-        }
-
-        long daysOverdue = ChronoUnit.DAYS.between(dueDate, LocalDate.now());
-
-        if (daysOverdue <=0) {
-            return BigDecimal.ZERO;
-        } else {
-            return amount
-                .multiply(dailyRate)
-                .multiply(BigDecimal.valueOf(daysOverdue));
-        }
+    public BigDecimal calculateInterest() {
+        return billingPolicy.calculateInterest(this.amount, this.dueDate);
     }
     // Business rules - End
 

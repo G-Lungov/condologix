@@ -41,6 +41,12 @@ public class PaymentModel {
     @Column(name = "DUE_DATE", nullable = false)
     private LocalDate dueDate;
 
+    @Column(name ="INTEREST_AMOUNT", precision = 15, scale = 2)
+    private BigDecimal interestAmount;
+
+    @Column(name = "TOTAL_AMOUNT", precision = 15, scale = 2)
+    private BigDecimal totalAmount;
+
     @Column(name = "PAID_AT")
     private LocalDate paidAt;
 
@@ -75,6 +81,9 @@ public class PaymentModel {
         if (status != PaymentStatus.PENDING) {
             throw new IllegalArgumentException("Payment is already paid, only pending payments can be paid");
         }
+        BigDecimal interest = billingPolicy.calculateInterest(this.amount, this.dueDate);
+        this.interestAmount = interest;
+        this.totalAmount = this.amount.add(interest);
         this.status = PaymentStatus.PAID;
         this.paidAt = LocalDate.now();
     }

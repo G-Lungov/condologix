@@ -1,13 +1,16 @@
 package com.condologix.application.payment;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-import java.util.List;
 
-@Repository
+import java.util.List;
+import java.time.LocalDate;
+import org.springframework.data.jpa.repository.JpaRepository;
+
 public interface PaymentRepository extends JpaRepository<PaymentModel, Long> {
 
-    List<PaymentModel> findByBuilding (Long buildingId);
+    List<PaymentModel> findByBuildingId (Long buildingId);
+    List<PaymentModel> findByOrderId (Long orderId);
+    List<PaymentModel> findByDueDate (LocalDate dueDate);
+    List<PaymentModel> findByDueDateLessThanEqual (LocalDate dueDate);
     List<PaymentModel> findByStatus (PaymentStatus status);
-    List<PaymentModel> findByBuildingAndStatus (Long buildingId, PaymentStatus status);
+    List<PaymentModel> findByBuildingIdAndStatus (Long buildingId, PaymentStatus status);
 }

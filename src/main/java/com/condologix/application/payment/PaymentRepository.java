@@ -12,5 +12,6 @@ public interface PaymentRepository extends JpaRepository<PaymentModel, Long> {
     List<PaymentModel> findByDueDate (LocalDate dueDate);
     List<PaymentModel> findByDueDateLessThanEqual (LocalDate dueDate);
     List<PaymentModel> findByStatus (PaymentStatus status);
+    List<PaymentModel> findByDueDateLessThanEqualAndStatus (LocalDate dueDate, PaymentStatus status);
     List<PaymentModel> findByBuildingIdAndStatus (Long buildingId, PaymentStatus status);
 }

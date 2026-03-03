@@ -1,7 +1,8 @@
 package com.condologix.application.payment;
 
 public enum PaymentStatus {
-    PENDING,
+    FAILED,
+    OPEN,
     PAID,
-    FAILED
+    PENDING
 }

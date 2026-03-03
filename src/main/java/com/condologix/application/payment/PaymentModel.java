@@ -88,8 +88,8 @@ public class PaymentModel {
         this.paidAt = LocalDate.now();
     }
 
-    public boolean isOverdue() {
-        return LocalDate.now().isAfter(dueDate) && status != PaymentStatus.PAID;
+    public boolean isOverdue(LocalDate today) {
+        return status == PaymentStatus.OPEN && today.isAfter(dueDate);
     }
     public BigDecimal calculateInterest() {
         return billingPolicy.calculateInterest(this.amount, this.dueDate);

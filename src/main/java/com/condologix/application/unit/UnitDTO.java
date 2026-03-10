@@ -1,5 +1,5 @@
-package com.condologix.application.terminal;
+package com.condologix.application.unit;
 
-public class TerminalDTO {
+public class UnitDTO {
 
 }

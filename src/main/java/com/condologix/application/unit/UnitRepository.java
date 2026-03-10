@@ -1,5 +1,5 @@
-package com.condologix.application.terminal;
+package com.condologix.application.unit;
 
-public class TerminalRepository {
+public class UnitRepository {
 
 }

@@ -35,15 +35,23 @@ public class OrderModel {
 
     @Column(name = "SENDER_NAME", nullable = false, length = 50)
     private String senderName;
+    @Column(name = "CARRIER", nullable = false, length = 50)
     private String carrier;
+    @Column(name = "TRACKING_CODE", nullable = false, length = 25)
     private String trackingCode;
+    @Column(name = "DESCRIPTION", nullable = true, length = 100)
     private String description;
 
+    @Column(name = "ARRIVED_AT")
     private LocalDateTime arrivedAt;
+    @Column(name = "NOTIFIED_AT")
     private LocalDateTime notifiedAt;
+    @Column(name = "PICED_UP_AT")
     private LocalDateTime pickedUpAt;
 
+    @Column(name = "REGISTRATION_TYPE")
     private OrderRegistrationType registrationType;
+    @Column(name = "STATUS")
     private OrderStatus status;
 
 }

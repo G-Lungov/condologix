@@ -33,6 +33,7 @@ public class OrderModel {
     @JoinColumn(name = "CONCIERGE_ID", nullable = false)
     private ConciergeModel conciergeId;
 
+    @Column(name = "SENDER_NAME", nullable = false, length = 50)
     private String senderName;
     private String carrier;
     private String trackingCode;

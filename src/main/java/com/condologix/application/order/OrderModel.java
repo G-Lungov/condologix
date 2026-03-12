@@ -49,9 +49,30 @@ public class OrderModel {
     @Column(name = "PICED_UP_AT")
     private LocalDateTime pickedUpAt;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "REGISTRATION_TYPE")
     private OrderRegistrationType registrationType;
+    @Enumerated(EnumType.STRING)
     @Column(name = "STATUS")
     private OrderStatus status;
 
+    public OrderModel (
+        BuildingModel buildingId,
+        UnitModel unitId,
+        ResidentModel residentId,
+        ConciergeModel conciergeId,
+        String senderName,
+        String carrier,
+        String trackingCode,
+        String description
+    ) {
+        this.buildingId = buildingId;
+        this.unitId = unitId;
+        this.residentId = residentId;
+        this.conciergeId = conciergeId;
+        this.senderName = senderName;
+        this.carrier = carrier;
+        this.trackingCode = trackingCode;
+        this.description = description;
+    }
 }

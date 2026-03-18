@@ -1,5 +1,7 @@
 package com.condologix.application.order;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,10 +17,6 @@ public class OrderService {
     private final OrderRepository orderRepository;
     public OrderService (OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
-    }
-
-    private void notifyResident(OrderModel order) {
-        // Integrate with notification.
     }
 
     public OrderModel createOrder(
@@ -49,9 +47,7 @@ public class OrderService {
             notifyResident(savedOrder);
             savedOrder.markAsNotified();
         }
-
         return savedOrder;
-
     }
 
     public OrderModel assignResident(Long orderId, ResidentModel resident) {
@@ -60,7 +56,29 @@ public class OrderService {
         order.assignResident(resident);
         notifyResident(order);
         order.markAsNotified();
-
         return orderRepository.save(order);
+    }
+
+    public OrderModel markAsPickedUp(Long orderId) {
+        OrderModel order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new IllegalArgumentException("Order not found with id: " + orderId));
+        order.markAsPickedUp();
+        return orderRepository.save(order);
+    }
+
+    public void notifyResident(OrderModel order) {
+            // Integrate with notification.
+    }
+
+    public List<OrderModel> getOrdersByBuilding(Long buildingId) {
+        return orderRepository.findByBuildingId(buildingId);
+    }
+
+    public List<OrderModel> getPendingOrders(Long buildingId) {
+        return orderRepository.findByBuildingIdAndStatus(buildingId, OrderStatus.NOTIFIED);
+    }
+
+    public List<OrderModel> getOrdersByResident(Long residentId) {
+        return orderRepository.findByResidentId(residentId);
     }
 }

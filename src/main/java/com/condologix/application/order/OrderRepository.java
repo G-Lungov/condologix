@@ -8,9 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface OrderRepository extends JpaRepository<OrderModel, Long>{
 
     List<OrderModel> findByBuildingId(Long buildingId);
-    List<OrderModel> findByBuildingAndStatus(Long buildingId, OrderStatus status);
+    List<OrderModel> findByBuildingIdAndStatus(Long buildingId, OrderStatus status);
     List<OrderModel> findByResidentId(Long residentId);
-    List<OrderModel> findByPendingResidenIdAndStatus(Long residentId, OrderStatus status);
+    List<OrderModel> findByPendingResidentIdAndStatus(Long residentId, OrderStatus status);
     List<OrderModel> findByBuildingIdAndResidentIsNull(Long buildingId);
     Optional<OrderModel> findByTrackingCode(String trackingCode);
 

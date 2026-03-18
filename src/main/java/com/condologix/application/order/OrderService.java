@@ -70,7 +70,14 @@ public class OrderService {
             // Integrate with notification.
     }
 
-    public List<OrderModel> getOrdersByBuilding(Long buildingId) {
+    // Temporary method to get current building ID. In a real application, this would be retrieved from JWT or session context.
+    private Long getCurrentBuildingId() {
+        return 1L;
+    }
+    // Temporary method to get current building ID. In a real application, this would be retrieved from JWT or session context.
+
+    public List<OrderModel> getOrdersForCurrentBuilding() {
+        Long buildingId = getCurrentBuildingId();
         return orderRepository.findByBuildingId(buildingId);
     }
 

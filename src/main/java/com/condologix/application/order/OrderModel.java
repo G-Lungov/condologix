@@ -26,8 +26,8 @@ public class OrderModel {
     @ManyToOne(optional = false)
     @JoinColumn(name = "UNIT_ID", nullable = false)
     private UnitModel unit;
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "RESIDENT_ID", nullable = false)
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "RESIDENT_ID")
     private ResidentModel resident;
     @ManyToOne(optional = false)
     @JoinColumn(name = "CONCIERGE_ID", nullable = false)
@@ -69,10 +69,10 @@ public class OrderModel {
     ) {
         if (building == null) throw new IllegalArgumentException("Building cannot be null");
         if (unit == null) throw new IllegalArgumentException("Unit cannot be null");
-        if (resident == null) throw new IllegalArgumentException("Resident cannot be null");
         if (concierge == null) throw new IllegalArgumentException("Concierge cannot be null");
         if (senderName ==  null || senderName.isBlank()) throw new IllegalArgumentException("Sender name cannot be null or blank");
         if (carrier == null || carrier.isBlank()) throw new IllegalArgumentException ("Carrier cannot be null or blanck");
+        if (resident != null && !resident.getUnit().equals(unit)) {throw new IllegalArgumentException("Resident does not belong to the unit");}
 
         this.building = building;
         this.unit = unit;
@@ -107,6 +107,19 @@ public class OrderModel {
         }
         this.unit = newUnit;
         this.resident = newResident;
+    }
+
+    public void assignResident(ResidentModel resident) {
+        if (resident == null) {
+            throw new IllegalArgumentException("Resident cannot be null");
+        }
+        if (!resident.getUnit().equals(this.unit)) {
+            throw new IllegalArgumentException("Resident does not belong to the unit");
+        }
+        if (this.status == OrderStatus.PICKED_UP) {
+            throw new IllegalArgumentException("Cannot assign resident after pickup");
+        }
+        this.resident = resident;
     }
 
 }

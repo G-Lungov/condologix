@@ -4,6 +4,7 @@ import com.condologix.application.building.BuildingModel;
 import com.condologix.application.concierge.ConciergeModel;
 import com.condologix.application.resident.ResidentModel;
 import com.condologix.application.unit.UnitModel;
+
 import java.time.LocalDateTime;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -19,7 +20,6 @@ public class OrderModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     @ManyToOne(optional = false)
     @JoinColumn(name =  "BUILDING_ID", nullable = false)
     private BuildingModel building;

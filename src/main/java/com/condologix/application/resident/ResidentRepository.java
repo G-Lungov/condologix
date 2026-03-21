@@ -1,11 +1,14 @@
 package com.condologix.application.resident;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ResidentRepository extends JpaRepository<ResidentModel, Long> {
 
+    List<ResidentModel> findByBuildingId(Long buildingId);
+    List<ResidentModel> findByBuildingIdAndUnitId(Long buildingId, Long unitId);
+    List<ResidentModel> findByPhone(long phone);
+    List<ResidentModel> findByEmail(String email);
 
 }

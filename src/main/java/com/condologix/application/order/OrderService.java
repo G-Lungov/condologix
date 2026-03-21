@@ -52,7 +52,9 @@ public class OrderService {
 
     public OrderModel assignResident(Long orderId, ResidentModel resident) {
         OrderModel order = orderRepository.findById(orderId)
-            .orElseThrow(() -> new IllegalArgumentException("Order not found with id: " + orderId));
+            .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
+        ResidentModel resident = residentRepository.findById(residentId)
+            .orElseThrow(() -> new RuntimeException("Resident not found with id: " + residentId));
         order.assignResident(resident);
         notifyResident(order);
         order.markAsNotified();
@@ -81,7 +83,8 @@ public class OrderService {
         return orderRepository.findByBuildingId(buildingId);
     }
 
-    public List<OrderModel> getPendingOrders(Long buildingId) {
+    public List<OrderModel> getPendingOrders() {
+        Long buildingId = getCurrentBuildingId();
         return orderRepository.findByBuildingIdAndStatus(buildingId, OrderStatus.NOTIFIED);
     }
 

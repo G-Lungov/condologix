@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.condologix.application.building.BuildingModel;
 import com.condologix.application.concierge.ConciergeModel;
 import com.condologix.application.resident.ResidentModel;
+import com.condologix.application.resident.ResidentRepository;
 import com.condologix.application.unit.UnitModel;
 
 @Service
@@ -15,9 +16,13 @@ import com.condologix.application.unit.UnitModel;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    public OrderService (OrderRepository orderRepository) {
+    private final ResidentRepository residentRepository;
+    public OrderService (OrderRepository orderRepository, ResidentRepository residentRepository) {
         this.orderRepository = orderRepository;
+        this.residentRepository = residentRepository;
     }
+
+
 
     public OrderModel createOrder(
         BuildingModel building,
@@ -50,7 +55,7 @@ public class OrderService {
         return savedOrder;
     }
 
-    public OrderModel assignResident(Long orderId, ResidentModel resident) {
+    public OrderModel assignResident(Long orderId, Long residentId) {
         OrderModel order = orderRepository.findById(orderId)
             .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
         ResidentModel resident = residentRepository.findById(residentId)

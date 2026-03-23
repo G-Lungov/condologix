@@ -2,11 +2,19 @@ package com.condologix.application.unit;
 
 import com.condologix.application.building.BuildingModel;
 
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
+@Entity
+@Table(name = "units")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UnitModel {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private BuildingModel building;
     private short number;

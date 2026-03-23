@@ -13,8 +13,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ResidentModel {
 
-    @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @ManyToOne(optional = false)
     @JoinColumn(name = "UNIT_ID", nullable = false)
     private UnitModel unit;

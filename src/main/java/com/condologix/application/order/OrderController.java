@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.condologix.application.resident.ResidentModel;
-
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {

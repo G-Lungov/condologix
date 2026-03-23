@@ -16,9 +16,33 @@ public class UnitModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "BUILDING_ID", nullable = false)
     private BuildingModel building;
-    private short number;
-    private String block;
-    private UnitType type;
 
+    @Column(name = "NUMBER", nullable = false)
+    private short number;
+    @Column(name = "BLOCK", nullable = false)
+    private String block;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "UNIT_TYPE", nullable = false)
+    private UnitType unitType;
+
+    public UnitModel (
+        BuildingModel building,
+        short number,
+        String block,
+        UnitType unitType
+    ) {
+        if (building == null) throw new IllegalArgumentException("Building cannot be null");
+        if (number == 0) throw new IllegalArgumentException("Unit number cannot be null");
+        if (block == null) throw new IllegalArgumentException("Block cannot be null");
+        if (unitType ==  null) throw new IllegalArgumentException("Unit type needs to be either RESIDENCIAL or COMERCIAL");
+
+        this.building = building;
+        this.number = number;
+        this.block = block;
+        this.unitType = unitType;
+    }
 }

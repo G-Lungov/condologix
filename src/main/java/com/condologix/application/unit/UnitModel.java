@@ -36,8 +36,8 @@ public class UnitModel {
         UnitType unitType
     ) {
         if (building == null) throw new IllegalArgumentException("Building cannot be null");
-        if (number == 0) throw new IllegalArgumentException("Unit number cannot be null");
-        if (block == null) throw new IllegalArgumentException("Block cannot be null");
+        if (number == 0 ) throw new IllegalArgumentException("Unit number cannot be null");
+        if (block == null || block.isEmpty()) throw new IllegalArgumentException("Block cannot be null");
         if (unitType ==  null) throw new IllegalArgumentException("Unit type needs to be either RESIDENCIAL or COMERCIAL");
 
         this.building = building;

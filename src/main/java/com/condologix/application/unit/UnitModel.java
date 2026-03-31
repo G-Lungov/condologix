@@ -8,7 +8,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "units")
+@Table(
+    name = "units",
+    uniqueConstraints = {
+        @UniqueConstraint(name = "UK_UNIT_BUILDING_BLOCK_NUMBER",
+        columnNames = {"BUILDING_ID", "BLOCK", "NUMBER"}
+    )
+    }
+)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UnitModel {
@@ -36,8 +43,8 @@ public class UnitModel {
         UnitType unitType
     ) {
         if (building == null) throw new IllegalArgumentException("Building cannot be null");
-        if (number == 0 ) throw new IllegalArgumentException("Unit number cannot be null");
-        if (block == null || block.isEmpty()) throw new IllegalArgumentException("Block cannot be null");
+        if (number <= 0 ) throw new IllegalArgumentException("Unit number cannot be null");
+        if (block == null || block.isEmpty() || block.isBlank()) throw new IllegalArgumentException("Block cannot be null");
         if (unitType ==  null) throw new IllegalArgumentException("Unit type needs to be either RESIDENCIAL or COMERCIAL");
 
         this.building = building;

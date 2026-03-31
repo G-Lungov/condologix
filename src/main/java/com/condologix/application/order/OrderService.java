@@ -22,8 +22,6 @@ public class OrderService {
         this.residentRepository = residentRepository;
     }
 
-
-
     public OrderModel createOrder(
         BuildingModel building,
         UnitModel unit,

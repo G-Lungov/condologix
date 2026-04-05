@@ -71,12 +71,12 @@ public class PaymentModel {
     // Constructor (Factory)
 
     public PaymentModel(
-            BuildingModel building,
-            String billingPeriod,
-            BigDecimal amount,
-            BigDecimal interestRate,
-            LocalDate createdAt,
-            LocalDate dueDate
+        BuildingModel building,
+        String billingPeriod,
+        BigDecimal amount,
+        BigDecimal interestRate,
+        LocalDate createdAt,
+        LocalDate dueDate
     ) {
         if (building == null) {
             throw new IllegalArgumentException("Building cannot be null");

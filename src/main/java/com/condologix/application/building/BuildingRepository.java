@@ -1,5 +1,9 @@
 package com.condologix.application.building;
 
-public class BuildingRepository {
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface BuildingRepository extends JpaRepository<BuildingModel, Long>{
 
 }

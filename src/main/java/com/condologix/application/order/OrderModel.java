@@ -19,7 +19,7 @@ public class OrderModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @ManyToOne(optional = false)
     @JoinColumn(name =  "BUILDING_ID", nullable = false)
     private BuildingModel building;
@@ -99,6 +99,8 @@ public class OrderModel {
         if (this.status == OrderStatus.PICKED_UP) {
             throw new IllegalArgumentException("Order is already macked as picked up");
         }
+        this.status = OrderStatus.PICKED_UP;
+        this.pickedUpAt = LocalDateTime.now();
     }
 
     public void changeResident(ResidentModel newResident, UnitModel newUnit) {

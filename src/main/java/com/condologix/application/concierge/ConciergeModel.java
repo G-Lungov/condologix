@@ -1,8 +1,14 @@
 package com.condologix.application.concierge;
 
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
+@Entity
+@Table(name = "concierges")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ConciergeModel {
 
     private long id;

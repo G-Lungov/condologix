@@ -42,7 +42,7 @@ public class UnitService {
         return unitRepository.findByBuildingIdAndUnitType(buildingId, unitType);
     }
 
-    private String normalizedBlock(String block) {
+    public String normalizedBlock(String block) {
         if (block == null) throw new IllegalArgumentException("Block cannot be null");
         String normalized = block.trim().toUpperCase();
         if (normalized.isBlank()) throw new IllegalArgumentException("Block cannot be blank");

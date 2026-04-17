@@ -1,8 +1,6 @@
 package com.condologix.application.resident;
 
-import com.condologix.application.building.BuildingModel;
 import com.condologix.application.unit.UnitModel;
-import com.condologix.application.unit.UnitService;
 import com.condologix.application.unit.UnitRepository;
 
 import java.util.List;
@@ -16,12 +14,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 public class ResidentService {
 
     private final ResidentRepository residentRepository;
-    private final UnitService unitService;
     private final UnitRepository unitRepository;
 
-    public ResidentService(ResidentRepository residentRepository, UnitService unitService, UnitRepository unitRepository) {
+    public ResidentService(ResidentRepository residentRepository, UnitRepository unitRepository) {
         this.residentRepository = residentRepository;
-        this.unitService = unitService;
         this.unitRepository = unitRepository;
     }
 
@@ -33,8 +29,6 @@ public class ResidentService {
             return residentRepository.save(resident);
         } catch (DataIntegrityViolationException e) {
             throw new IllegalArgumentException("Failed to create resident due to data integrity violation: " + e.getMessage());
-        } catch (Exception e) {
-            throw new RuntimeException("Unexpected error while creating resident: " + e.getMessage(), e);
         }
     }
 
@@ -51,10 +45,12 @@ public class ResidentService {
         residentRepository.delete(resident);
     }
 
-    public List<ResidentModel> getResidentsByUnit (BuildingModel building, String block, short number) {
-        String normalizedBlock = unitService.normalizedBlock(block);
-        UnitModel unit = unitRepository.findByBuildingIdAndBlockAndNumber(building.getId(), normalizedBlock, number)
-            .orElseThrow(() -> new IllegalArgumentException("Unit not found: " + building.getId() + ", " + number + ", " + normalizedBlock));
+    public List<ResidentModel> getResidentsByUnit (Long buildingId, String block, short number) {
+        if (block == null) throw new IllegalArgumentException("Block cannot be null");
+        String normalizedBlock = block.trim().toUpperCase();
+        if (normalizedBlock.isBlank()) throw new IllegalArgumentException("Block cannot be blank");
+        UnitModel unit = unitRepository.findByBuildingIdAndBlockAndNumber(buildingId, normalizedBlock, number)
+            .orElseThrow(() -> new IllegalArgumentException("Unit not found: " + buildingId + ", " + number + ", " + normalizedBlock));
         return residentRepository.findByUnitId(unit.getId());
     }
 }

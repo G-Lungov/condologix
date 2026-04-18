@@ -5,9 +5,9 @@ import com.condologix.application.unit.UnitRepository;
 
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.dao.DataIntegrityViolationException;
 
 @Service
 @Transactional
@@ -21,22 +21,35 @@ public class ResidentService {
         this.unitRepository = unitRepository;
     }
 
-    public ResidentModel createResident(ResidentModel resident) {
-        if (resident == null) {
-            throw new IllegalArgumentException("Resident cannot be null");
+    public ResidentDTO createResident(ResidentCreateDTO residentDTO) {
+        if (residentDTO == null) {
+            throw new IllegalArgumentException("Resident data cannot be null");
         }
+
+        UnitModel unit = unitRepository.findById(residentDTO.unitId())
+            .orElseThrow(() -> new IllegalArgumentException("Unit not found: " + residentDTO.unitId()));
+
+        ResidentModel resident = new ResidentModel(
+            unit,
+            residentDTO.name(),
+            residentDTO.email(),
+            residentDTO.phone()
+        );
+
         try {
-            return residentRepository.save(resident);
+            ResidentModel savedResident = residentRepository.save(resident);
+            return toDTO(savedResident);
         } catch (DataIntegrityViolationException e) {
-            throw new IllegalArgumentException("Failed to create resident due to data integrity violation: " + e.getMessage());
+            throw new IllegalStateException("Failed to create resident due to data integrity violation", e);
         }
     }
 
-    public ResidentModel updateResidentModel(Long residentId, String email, long phone) {
+    public ResidentDTO updateResident(Long residentId, ResidentUpdateDTO residentDTO) {
         ResidentModel resident = residentRepository.findById(residentId)
             .orElseThrow(() -> new IllegalArgumentException("Resident not found: " + residentId));
-        resident.updateContactInfo(email, phone);
-        return residentRepository.save(resident);
+        resident.updateContactInfo(residentDTO.email(), residentDTO.phone());
+        ResidentModel updatedResident = residentRepository.save(resident);
+        return toDTO(updatedResident);
     }
 
     public void deleteResident(Long residentId) {
@@ -45,12 +58,24 @@ public class ResidentService {
         residentRepository.delete(resident);
     }
 
-    public List<ResidentModel> getResidentsByUnit (Long buildingId, String block, short number) {
-        if (block == null) throw new IllegalArgumentException("Block cannot be null");
-        String normalizedBlock = block.trim().toUpperCase();
-        if (normalizedBlock.isBlank()) throw new IllegalArgumentException("Block cannot be blank");
-        UnitModel unit = unitRepository.findByBuildingIdAndBlockAndNumber(buildingId, normalizedBlock, number)
-            .orElseThrow(() -> new IllegalArgumentException("Unit not found: " + buildingId + ", " + number + ", " + normalizedBlock));
-        return residentRepository.findByUnitId(unit.getId());
+    @Transactional(readOnly = true)
+    public List<ResidentDTO> getResidentsByUnit(Long unitId) {
+        if (unitId == null) {
+            throw new IllegalArgumentException("Unit ID cannot be null");
+        }
+        return residentRepository.findByUnitId(unitId)
+            .stream()
+            .map(this::toDTO)
+            .toList();
+    }
+
+    private ResidentDTO toDTO(ResidentModel resident) {
+        return new ResidentDTO(
+            resident.getId(),
+            resident.getUnit().getId(),
+            resident.getName(),
+            resident.getEmail(),
+            resident.getPhone()
+        );
     }
 }

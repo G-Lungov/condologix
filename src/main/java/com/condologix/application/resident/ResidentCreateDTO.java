@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 public record ResidentCreateDTO(
-    @NotNull @Positive(message = "Unit ID is required")
+    @NotNull @Positive(message = "Unit ID must be a positive number")
     Long unitId,
 
     @NotBlank(message = "Name is required")

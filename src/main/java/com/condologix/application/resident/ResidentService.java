@@ -1,5 +1,6 @@
 package com.condologix.application.resident;
 
+import com.condologix.application.exception.*;
 import com.condologix.application.unit.UnitModel;
 import com.condologix.application.unit.UnitRepository;
 
@@ -22,12 +23,8 @@ public class ResidentService {
     }
 
     public ResidentDTO createResident(ResidentCreateDTO residentDTO) {
-        if (residentDTO == null) {
-            throw new IllegalArgumentException("Resident data cannot be null");
-        }
-
         UnitModel unit = unitRepository.findById(residentDTO.unitId())
-            .orElseThrow(() -> new IllegalArgumentException("Unit not found: " + residentDTO.unitId()));
+            .orElseThrow(() -> new ResourceNotFoundException("Unit not found: " + residentDTO.unitId()));
 
         ResidentModel resident = new ResidentModel(
             unit,
@@ -46,7 +43,7 @@ public class ResidentService {
 
     public ResidentDTO updateResident(Long residentId, ResidentUpdateDTO residentDTO) {
         ResidentModel resident = residentRepository.findById(residentId)
-            .orElseThrow(() -> new IllegalArgumentException("Resident not found: " + residentId));
+            .orElseThrow(() -> new ResourceNotFoundException("Resident not found: " + residentId));
         resident.updateContactInfo(residentDTO.email(), residentDTO.phone());
         ResidentModel updatedResident = residentRepository.save(resident);
         return toDTO(updatedResident);
@@ -54,7 +51,7 @@ public class ResidentService {
 
     public void deleteResident(Long residentId) {
         ResidentModel resident = residentRepository.findById(residentId)
-            .orElseThrow(() -> new IllegalArgumentException("Resident not found: " + residentId));
+            .orElseThrow(() -> new ResourceNotFoundException("Resident not found: " + residentId));
         residentRepository.delete(resident);
     }
 

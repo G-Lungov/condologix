@@ -1,13 +1,13 @@
 package com.condologix.application.unit;
 
+import com.condologix.application.exception.*;
+import com.condologix.application.building.BuildingModel;
+import com.condologix.application.building.BuildingRepository;
+
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.condologix.application.building.BuildingModel;
-import com.condologix.application.building.BuildingRepository;
-import com.condologix.application.exception.ResourceNotFoundException;
 
 @Service
 @Transactional
@@ -25,13 +25,21 @@ public class UnitService {
     public UnitModel createUnit(Long buildingId, short number, String block, UnitType unitType) {
         BuildingModel building = buildingRepository.findById(buildingId)
             .orElseThrow(() -> new ResourceNotFoundException("Building not found with id: " + buildingId));
+
         String normalizedBlock = normalizedBlock(block);
 
         if (unitRepository.existsByBuildingIdAndBlockAndNumber(building.getId(), normalizedBlock, number)) {
-            throw new IllegalArgumentException("Unit with the same block and number already exists");
+            throw new IllegalStateException("Unit with the same block and number already exists");
         }
 
-        UnitModel unit = new UnitModel(building, number, normalizedBlock, unitType);
+        // Add DTO
+        UnitModel unit = new UnitModel(
+            building,
+            number,
+            normalizedBlock,
+            unitType
+        );
+        // Add Try Catch
         return unitRepository.save(unit);
     }
 
@@ -59,4 +67,6 @@ public class UnitService {
         if (normalized.isBlank()) throw new IllegalArgumentException("Block cannot be blank");
         return normalized;
     }
+
+    // Add toDTO method
 }

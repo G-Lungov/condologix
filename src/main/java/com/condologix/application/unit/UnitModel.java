@@ -52,4 +52,9 @@ public class UnitModel {
         this.block = block;
         this.unitType = unitType;
     }
+
+    public void updateUnitType(UnitType unitType) {
+        if (unitType == null) {throw new IllegalArgumentException("Unit type needs to be either RESIDENDCIAL or COMERCIAL");}
+        this.unitType = unitType;
+    }
 }

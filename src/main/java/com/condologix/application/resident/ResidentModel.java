@@ -33,18 +33,10 @@ public class ResidentModel {
         String email,
         long phone
     ) {
-        if (unit == null) {
-            throw new IllegalArgumentException("Unit cannot be null");
-        }
-        if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("Name cannot be null or blank");
-        }
-        if (email == null || email.isBlank()) {
-            throw new IllegalArgumentException("Email cannot be null or blank");
-        }
-        if (phone == 0 || String.valueOf(phone).length() != 11) {
-            throw new IllegalArgumentException("Phone number must not be null and must be 11 digits long");
-        }
+        if (unit == null) {throw new IllegalArgumentException("Unit cannot be null");}
+        if (name == null || name.isBlank()) {throw new IllegalArgumentException("Name cannot be null or blank");}
+        if (email == null || email.isBlank()) {throw new IllegalArgumentException("Email cannot be null or blank");}
+        if (phone == 0 || String.valueOf(phone).length() != 11) {throw new IllegalArgumentException("Phone number must not be null and must be 11 digits long");}
 
         this.unit = unit;
         this.name = name;

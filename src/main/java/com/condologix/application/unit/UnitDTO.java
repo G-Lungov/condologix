@@ -1,5 +1,10 @@
 package com.condologix.application.unit;
 
-public class UnitDTO {
-
+public record UnitDTO (
+    Long id,
+    Long buildingId,
+    short number,
+    String block,
+    UnitType unitType
+) {
 }

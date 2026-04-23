@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.dao.DataIntegrityViolationException;
 
 @Service
 @Transactional
@@ -21,44 +22,68 @@ public class UnitService {
         this.buildingRepository = buildingRepository;
     }
 
-    // UnitDTO createUnit
-    public UnitModel createUnit(Long buildingId, short number, String block, UnitType unitType) {
-        BuildingModel building = buildingRepository.findById(buildingId)
-            .orElseThrow(() -> new ResourceNotFoundException("Building not found with id: " + buildingId));
+    public UnitDTO createUnit(UnitCreateDTO unitDTO) {
+        BuildingModel building = buildingRepository.findById(unitDTO.buildingId())
+            .orElseThrow(() -> new ResourceNotFoundException("Building not found with id: " + unitDTO.buildingId()));
 
-        String normalizedBlock = normalizedBlock(block);
+        String normalizedBlock = normalizedBlock(unitDTO.block());
 
-        if (unitRepository.existsByBuildingIdAndBlockAndNumber(building.getId(), normalizedBlock, number)) {
+        if (unitRepository.existsByBuildingIdAndBlockAndNumber(building.getId(), normalizedBlock, unitDTO.number())) {
             throw new IllegalStateException("Unit with the same block and number already exists");
         }
 
-        // Add DTO
         UnitModel unit = new UnitModel(
             building,
-            number,
+            unitDTO.number(),
             normalizedBlock,
-            unitType
+            unitDTO.unitType()
         );
-        // Add Try Catch
-        return unitRepository.save(unit);
+
+        try {
+            UnitModel savedUnit = unitRepository.save(unit);
+            return toDTO(savedUnit);
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalStateException("Failed to create unit due to data integrity violation", e);
+        }
     }
 
-    // UnitDTO updateUnitType
-    public UnitModel updateUnitType(Long unitId, UnitType unitType) {
+    public UnitDTO updateUnitType(Long unitId, UnitUpdateDTO unitDTO) {
         UnitModel unit = unitRepository.findById(unitId)
             .orElseThrow(() -> new ResourceNotFoundException("Unit not found with id: " + unitId));
-        unit.updateUnitType(unitType);
-        return unitRepository.save(unit);
+        unit.updateUnitType(unitDTO.unitType());
+        UnitModel updateUnit = unitRepository.save(unit);
+        return toDTO(updateUnit);
+    }
+
+    public void deleteUnit(Long unitId) {
+        UnitModel unit = unitRepository.findById(unitId)
+            .orElseThrow(() -> new ResourceNotFoundException("Unit not found with id: " + unitId));
+        unitRepository.delete(unit);
     }
 
     @Transactional(readOnly = true)
-    public List<UnitModel> getUnitsByBuilding(Long buildingId) {
-        return unitRepository.findByBuildingId(buildingId);
+    public List<UnitDTO> getUnitsByBuilding(Long buildingId) {
+        if (buildingId == null) {
+            throw new IllegalArgumentException("Building ID cannot be null");
+        }
+        return unitRepository.findByBuildingId(buildingId)
+        .stream()
+        .map(this::toDTO)
+        .toList();
     }
 
     @Transactional(readOnly = true)
-    public List<UnitModel> getUnitsByBuildingAndType(Long buildingId, UnitType unitType) {
-        return unitRepository.findByBuildingIdAndUnitType(buildingId, unitType);
+    public List<UnitDTO> getUnitsByBuildingAndType(Long buildingId, UnitType unitType) {
+        if (buildingId == null) {
+            throw new IllegalArgumentException("Building ID cannot be null");
+        }
+        if (unitType == null) {
+            throw new IllegalArgumentException("Unit type cannot be null");
+        }
+        return unitRepository.findByBuildingIdAndUnitType(buildingId, unitType)
+                .stream()
+                .map(this::toDTO)
+                .toList();
     }
 
     public String normalizedBlock(String block) {
@@ -68,5 +93,13 @@ public class UnitService {
         return normalized;
     }
 
-    // Add toDTO method
+    public UnitDTO toDTO(UnitModel unit) {
+        return new UnitDTO(
+            unit.getId(),
+            unit.getBuilding().getId(),
+            unit.getNumber(),
+            unit.getBlock(),
+            unit.getUnitType()
+        );
+    }
 }

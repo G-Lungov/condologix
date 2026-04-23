@@ -23,13 +23,13 @@ public class UnitController {
 
     @PostMapping
     public ResponseEntity<UnitDTO> createUnit(@Valid @RequestBody UnitCreateDTO unitDTO) {
-        UnitDTO createUnitDTO = unitService.createUnit(unitDTO);
-        return new ResponseEntity<>(createUnit, HttpStatus.CREATED);
+        UnitDTO createdUnit = unitService.createUnit(unitDTO);
+        return new ResponseEntity<>(createdUnit, HttpStatus.CREATED);
     }
 
     @PutMapping("/{unitId}/type")
     public ResponseEntity<UnitDTO> updateUnitType(@PathVariable @Positive Long unitId, @Valid @RequestBody UnitUpdateDTO unitDTO) {
-        UnitDTO updateUnit = unitService.updateUnit(unitId, unitDTO);
+        UnitDTO updatedUnit = unitService.updateUnitType(unitId, unitDTO);
         return ResponseEntity.ok(updatedUnit);
     }
 
@@ -44,5 +44,4 @@ public class UnitController {
         List<UnitDTO> units = unitService.getUnitsByBuilding(buildingId);
         return ResponseEntity.ok(units);
     }
-
 }

@@ -28,9 +28,7 @@ public class ResidentController {
     }
 
     @PutMapping("/{residentId}")
-    public ResponseEntity<ResidentDTO> updateResident(
-            @PathVariable @Positive Long residentId,
-            @Valid @RequestBody ResidentUpdateDTO residentDTO) {
+    public ResponseEntity<ResidentDTO> updateResident(@PathVariable @Positive Long residentId, @Valid @RequestBody ResidentUpdateDTO residentDTO) {
         ResidentDTO updatedResident = residentService.updateResident(residentId, residentDTO);
         return ResponseEntity.ok(updatedResident);
     }

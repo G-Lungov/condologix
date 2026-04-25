@@ -43,9 +43,9 @@ public class UnitModel {
         UnitType unitType
     ) {
         if (building == null) throw new IllegalArgumentException("Building cannot be null");
-        if (number <= 0 ) throw new IllegalArgumentException("Unit number cannot be null");
-        if (block == null || block.isEmpty() || block.isBlank()) throw new IllegalArgumentException("Block cannot be null");
-        if (unitType ==  null) throw new IllegalArgumentException("Unit type needs to be either RESIDENCIAL or COMERCIAL");
+        if (number <= 0 ) throw new IllegalArgumentException("Unit number must be positive");
+        if (block == null || block.isBlank()) throw new IllegalArgumentException("Block cannot be blank");
+        if (unitType ==  null) throw new IllegalArgumentException("Unit type needs to be either RESIDENTIAL or COMERCIAL");
 
         this.building = building;
         this.number = number;
@@ -54,7 +54,7 @@ public class UnitModel {
     }
 
     public void updateUnitType(UnitType unitType) {
-        if (unitType == null) {throw new IllegalArgumentException("Unit type needs to be either RESIDENDCIAL or COMERCIAL");}
+        if (unitType == null) {throw new IllegalArgumentException("Unit type needs to be either RESIDENTIAL or COMERCIAL");}
         this.unitType = unitType;
     }
 }

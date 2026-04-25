@@ -26,7 +26,7 @@ public class UnitService {
         BuildingModel building = buildingRepository.findById(unitDTO.buildingId())
             .orElseThrow(() -> new ResourceNotFoundException("Building not found with id: " + unitDTO.buildingId()));
 
-        String normalizedBlock = normalizedBlock(unitDTO.block());
+        String normalizedBlock = normalizeBlock(unitDTO.block());
 
         if (unitRepository.existsByBuildingIdAndBlockAndNumber(building.getId(), normalizedBlock, unitDTO.number())) {
             throw new IllegalStateException("Unit with the same block and number already exists");
@@ -86,14 +86,14 @@ public class UnitService {
                 .toList();
     }
 
-    public String normalizedBlock(String block) {
+    private String normalizeBlock(String block) {
         if (block == null) throw new IllegalArgumentException("Block cannot be null");
         String normalized = block.trim().toUpperCase();
         if (normalized.isBlank()) throw new IllegalArgumentException("Block cannot be blank");
         return normalized;
     }
 
-    public UnitDTO toDTO(UnitModel unit) {
+    private UnitDTO toDTO(UnitModel unit) {
         return new UnitDTO(
             unit.getId(),
             unit.getBuilding().getId(),

@@ -3,7 +3,7 @@ package com.condologix.application.unit;
 public record UnitDTO (
     Long id,
     Long buildingId,
-    short number,
+    Short number,
     String block,
     UnitType unitType
 ) {

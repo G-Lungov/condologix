@@ -15,6 +15,10 @@ public class BuildingModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "CNPJ", nullable = false, unique = true)
+    private String cnpj;
+    @Column(name = "LEGAL_NAME", nullable = false)
+    private String legalName;
     @Column(name = "NAME", nullable = false)
     private String name;
     @Column(name = "PHONE", nullable = false)
@@ -35,6 +39,8 @@ public class BuildingModel {
     private String state;
 
     public BuildingModel (
+        String cnpj,
+        String legalName,
         String name,
         String phone,
         String email,
@@ -45,8 +51,10 @@ public class BuildingModel {
         String city,
         String state
     ) {
+        if (cnpj == null || cnpj.length() != 14 || characteresIsDigit(cnpj)) throw new IllegalArgumentException("CNPJ cannot be null, must have 14 digits");
+        if (legalName == null || legalName.length() < 3 || legalName.length() > 100) throw new IllegalArgumentException("Legal name cannot be null and must have between 3 and 100 characters");
         if (name == null) throw new IllegalArgumentException("Name cannot be null");
-        if (phone == null || phone.length() != 11 || phoneCharacteresIsDigit(phone) != true) throw new IllegalArgumentException("Phone cannot be null, must have 11 digits");
+        if (phone == null || phone.length() != 11 || characteresIsDigit(phone) != true) throw new IllegalArgumentException("Phone cannot be null, must have 11 digits");
         if (email == null) throw new IllegalArgumentException("Email cannot be null");
         if (address == null) throw new IllegalArgumentException("Address cannot be null");
         if (addressNumber == 0) throw new IllegalArgumentException("Address number cannot be null");
@@ -55,6 +63,8 @@ public class BuildingModel {
         if (city == null) throw new IllegalArgumentException("City cannot be null");
         if (state == null) throw new IllegalArgumentException("State cannot be null");
 
+        this.cnpj = cnpj;
+        this.legalName = legalName;
         this.name = name;
         this.phone = phone;
         this.email = email;
@@ -66,9 +76,9 @@ public class BuildingModel {
         this.state = state;
     }
 
-    public static boolean phoneCharacteresIsDigit (String phone) {
-        for (int i=0; i < phone.length(); i++) {
-            if (!Character.isDigit(phone.charAt(i))) {
+    public static boolean characteresIsDigit (String string) {
+        for (int i=0; i < string.length(); i++) {
+            if (!Character.isDigit(string.charAt(i))) {
                 return false;
             }
         }

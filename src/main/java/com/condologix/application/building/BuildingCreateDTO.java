@@ -6,6 +6,7 @@ public record BuildingCreateDTO(
 
     @NotBlank(message = "CNPJ cannot be blank, only digits")
     @Size(min = 14, max = 14, message = "CNPJ must have 14 characters")
+    @Pattern(regexp = "^\\d{14}$", message = "CNPJ must contain exactly 14 digits")
     String cnpj,
 
     @NotBlank(message = "Legal name cannot be blank")

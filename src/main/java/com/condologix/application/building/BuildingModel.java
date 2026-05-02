@@ -28,7 +28,7 @@ public class BuildingModel {
     @Column(name = "ADDRESS", nullable = false)
     private String address;
     @Column(name = "ADDRESS_NUMBER", nullable = false)
-    private int addressNumber;
+    private Integer addressNumber;
     @Column(name = "POSTAL_CODE", nullable = false)
     private String postalCode;
     @Column(name = "NEIGHBORHOOD", nullable = false)
@@ -45,23 +45,23 @@ public class BuildingModel {
         String phone,
         String email,
         String address,
-        int addressNumber,
+        Integer addressNumber,
         String postalCode,
         String neighborhood,
         String city,
         String state
     ) {
-        if (cnpj == null || cnpj.length() != 14 || characteresIsDigit(cnpj)) throw new IllegalArgumentException("CNPJ cannot be null, must have 14 digits");
+        if (cnpj == null || cnpj.length() != 14 || !characteresIsDigit(cnpj)) throw new IllegalArgumentException("CNPJ cannot be null, must have 14 digits");
         if (legalName == null || legalName.length() < 3 || legalName.length() > 100) throw new IllegalArgumentException("Legal name cannot be null and must have between 3 and 100 characters");
-        if (name == null) throw new IllegalArgumentException("Name cannot be null");
-        if (phone == null || phone.length() != 11 || characteresIsDigit(phone) != true) throw new IllegalArgumentException("Phone cannot be null, must have 11 digits");
+        if (name == null || name.length() < 3 || name.length() > 100) throw new IllegalArgumentException("Name cannot be null and must have between 3 and 100 characters");
+        if (phone == null || phone.length() != 11 || !characteresIsDigit(phone)) throw new IllegalArgumentException("Phone cannot be null, must have 11 digits");
         if (email == null) throw new IllegalArgumentException("Email cannot be null");
         if (address == null) throw new IllegalArgumentException("Address cannot be null");
-        if (addressNumber == 0) throw new IllegalArgumentException("Address number cannot be null");
-        if (postalCode == null || postalCode.length() != 8) throw new IllegalArgumentException("Postal code cannot be null and must have 8 charcteres");
+        if (addressNumber == null) throw new IllegalArgumentException("Address number cannot be null");
+        if (postalCode == null || postalCode.length() != 8 || !characteresIsDigit(postalCode)) throw new IllegalArgumentException("Postal code cannot be null and must have 8 digits");
         if (neighborhood == null) throw new IllegalArgumentException("Neighborhood cannot be null");
         if (city == null) throw new IllegalArgumentException("City cannot be null");
-        if (state == null) throw new IllegalArgumentException("State cannot be null");
+        if (state == null || state.length() != 2) throw new IllegalArgumentException("State cannot be null, must have 2 characters");
 
         this.cnpj = cnpj;
         this.legalName = legalName;

@@ -43,7 +43,7 @@ class ResidentControllerTest {
             1L,
             "John Doe",
             "john@example.com",
-            11999999999L
+            "11999999999"
         );
 
         when(residentService.createResident(any(ResidentCreateDTO.class))).thenReturn(response);
@@ -55,7 +55,7 @@ class ResidentControllerTest {
                         "unitId": 1,
                         "name": "John Doe",
                         "email": "john@example.com",
-                        "phone": 11999999999
+                        "phone": "11999999999"
                     }
                     """))
             .andExpect(status().isCreated())
@@ -63,7 +63,7 @@ class ResidentControllerTest {
             .andExpect(jsonPath("$.unitId").value(1))
             .andExpect(jsonPath("$.name").value("John Doe"))
             .andExpect(jsonPath("$.email").value("john@example.com"))
-            .andExpect(jsonPath("$.phone").value(11999999999L));
+            .andExpect(jsonPath("$.phone").value("11999999999"));
     }
 
     @Test
@@ -73,7 +73,7 @@ class ResidentControllerTest {
                 "unitId": -1,
                 "name": "",
                 "email": "invalid-email",
-                "phone": 123
+                "phone": "123"
             }
             """;
 
@@ -97,7 +97,7 @@ class ResidentControllerTest {
                         "unitId": 999,
                         "name": "John Doe",
                         "email": "john@example.com",
-                        "phone": 11999999999
+                        "phone": "11999999999"
                     }
                     """))
             .andExpect(status().isNotFound())
@@ -116,7 +116,7 @@ class ResidentControllerTest {
                         "unitId": 1,
                         "name": "John Doe",
                         "email": "john@example.com",
-                        "phone": 11999999999
+                        "phone": "11999999999"
                     }
                     """))
             .andExpect(status().isConflict())
@@ -130,7 +130,7 @@ class ResidentControllerTest {
             1L,
             "John Doe",
             "updated@example.com",
-            11988887777L
+            "11988887777"
         );
 
         when(residentService.updateResident(anyLong(), any(ResidentUpdateDTO.class))).thenReturn(response);
@@ -140,7 +140,7 @@ class ResidentControllerTest {
                 .content("""
                     {
                         "email": "updated@example.com",
-                        "phone": 11988887777
+                        "phone": "11988887777"
                     }
                     """))
             .andExpect(status().isOk())
@@ -158,7 +158,7 @@ class ResidentControllerTest {
                 .content("""
                     {
                         "email": "updated@example.com",
-                        "phone": 11988887777
+                        "phone": "11988887777"
                     }
                     """))
             .andExpect(status().isNotFound())
@@ -187,8 +187,8 @@ class ResidentControllerTest {
     @Test
     void getResidentsByUnitShouldReturnOk() throws Exception {
         List<ResidentDTO> residents = List.of(
-            new ResidentDTO(1L, 5L, "John Doe", "john@example.com", 11999999999L),
-            new ResidentDTO(2L, 5L, "Jane Doe", "jane@example.com", 11988887777L)
+            new ResidentDTO(1L, 5L, "John Doe", "john@example.com", "11999999999"),
+            new ResidentDTO(2L, 5L, "Jane Doe", "jane@example.com", "11988887777")
         );
 
         when(residentService.getResidentsByUnit(5L)).thenReturn(residents);

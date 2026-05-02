@@ -1,15 +1,15 @@
 package com.condologix.application.resident;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 public record ResidentCreateDTO(
-    @NotNull @Positive(message = "Unit ID must be a positive number")
+    @NotNull(message = "Unit ID is required")
+    @Positive(message = "Unit ID must be a positive number")
     Long unitId,
 
     @NotBlank(message = "Name is required")
@@ -20,8 +20,8 @@ public record ResidentCreateDTO(
     @Email(message = "Email should be valid")
     String email,
 
-    @Min(value = 10000000000L, message = "Phone must have exactly 11 digits")
-    @Max(value = 99999999999L, message = "Phone must have exactly 11 digits")
-    long phone
+    @NotBlank(message = "Phone is required")
+    @Pattern(regexp = "^\\d{11}$", message = "Phone must have exactly 11 digits")
+    String phone
 ) {
 }

@@ -72,7 +72,9 @@ public class OrderModel {
         if (concierge == null) throw new IllegalArgumentException("Concierge cannot be null");
         if (senderName ==  null || senderName.isBlank()) throw new IllegalArgumentException("Sender name cannot be null or blank");
         if (carrier == null || carrier.isBlank()) throw new IllegalArgumentException ("Carrier cannot be null or blanck");
-        if (resident != null && !resident.getUnit().equals(unit)) {throw new IllegalArgumentException("Resident does not belong to the unit");}
+        if (!isSameBuilding(building, unit.getBuilding())) throw new IllegalArgumentException("Unit does not belong to the building");
+        if (!isSameBuilding(building, concierge.getBuilding())) throw new IllegalArgumentException("Concierge does not belong to the building");
+        if (resident != null && !isSameUnit(resident.getUnit(), unit)) {throw new IllegalArgumentException("Resident does not belong to the unit");}
 
         this.building = building;
         this.unit = unit;
@@ -107,6 +109,15 @@ public class OrderModel {
         if (this.status == OrderStatus.PICKED_UP) {
             throw new IllegalArgumentException("Cannot change resident for an order that has already been picked up");
         }
+        if (newUnit == null) {
+            throw new IllegalArgumentException("Unit cannot be null");
+        }
+        if (!isSameBuilding(this.building, newUnit.getBuilding())) {
+            throw new IllegalArgumentException("Unit does not belong to the order building");
+        }
+        if (newResident != null && !isSameUnit(newResident.getUnit(), newUnit)) {
+            throw new IllegalArgumentException("Resident does not belong to the unit");
+        }
         this.unit = newUnit;
         this.resident = newResident;
     }
@@ -115,13 +126,33 @@ public class OrderModel {
         if (resident == null) {
             throw new IllegalArgumentException("Resident cannot be null");
         }
-        if (!resident.getUnit().equals(this.unit)) {
+        if (!isSameUnit(resident.getUnit(), this.unit)) {
             throw new IllegalArgumentException("Resident does not belong to the unit");
         }
         if (this.status == OrderStatus.PICKED_UP) {
             throw new IllegalArgumentException("Cannot assign resident after pickup");
         }
         this.resident = resident;
+    }
+
+    private boolean isSameBuilding(BuildingModel firstBuilding, BuildingModel secondBuilding) {
+        if (firstBuilding == null || secondBuilding == null) {
+            return false;
+        }
+        if (firstBuilding.getId() != null && secondBuilding.getId() != null) {
+            return firstBuilding.getId().equals(secondBuilding.getId());
+        }
+        return firstBuilding == secondBuilding;
+    }
+
+    private boolean isSameUnit(UnitModel firstUnit, UnitModel secondUnit) {
+        if (firstUnit == null || secondUnit == null) {
+            return false;
+        }
+        if (firstUnit.getId() != null && secondUnit.getId() != null) {
+            return firstUnit.getId().equals(secondUnit.getId());
+        }
+        return firstUnit == secondUnit;
     }
 
 }

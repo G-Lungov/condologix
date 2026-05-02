@@ -5,6 +5,6 @@ public record ResidentDTO(
     Long unitId,
     String name,
     String email,
-    long phone
+    String phone
 ) {
 }

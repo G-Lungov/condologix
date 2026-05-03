@@ -55,13 +55,13 @@ public class BuildingModel {
         if (legalName == null || legalName.length() < 3 || legalName.length() > 100) throw new IllegalArgumentException("Legal name cannot be null and must have between 3 and 100 characters");
         if (name == null || name.length() < 3 || name.length() > 100) throw new IllegalArgumentException("Name cannot be null and must have between 3 and 100 characters");
         if (phone == null || phone.length() != 11 || !characteresIsDigit(phone)) throw new IllegalArgumentException("Phone cannot be null, must have 11 digits");
-        if (email == null) throw new IllegalArgumentException("Email cannot be null");
-        if (address == null) throw new IllegalArgumentException("Address cannot be null");
+        if (email == null || email.isBlank()) throw new IllegalArgumentException("Email cannot be null or blank");
+        if (address == null || address.isBlank()) throw new IllegalArgumentException("Address cannot be null or blank");
         if (addressNumber == null) throw new IllegalArgumentException("Address number cannot be null");
         if (postalCode == null || postalCode.length() != 8 || !characteresIsDigit(postalCode)) throw new IllegalArgumentException("Postal code cannot be null and must have 8 digits");
-        if (neighborhood == null) throw new IllegalArgumentException("Neighborhood cannot be null");
-        if (city == null) throw new IllegalArgumentException("City cannot be null");
-        if (state == null || state.length() != 2) throw new IllegalArgumentException("State cannot be null, must have 2 characters");
+        if (neighborhood == null || neighborhood.isBlank()) throw new IllegalArgumentException("Neighborhood cannot be null or blank");
+        if (city == null || city.isBlank()) throw new IllegalArgumentException("City cannot be null or blank");
+        if (state == null || state.length() != 2 || !state.equals(state.toUpperCase())) throw new IllegalArgumentException("State cannot be null, must have 2 characters");
 
         this.cnpj = cnpj;
         this.legalName = legalName;
@@ -83,6 +83,14 @@ public class BuildingModel {
             }
         }
         return true;
+    }
+
+    public static void updateContactInfo(BuildingModel building, String phone, String email) {
+        if (phone == null || phone.length() != 11 || !characteresIsDigit(phone)) throw new IllegalArgumentException("Phone cannot be null, must have 11 digits");
+        if (email == null || email.isBlank()) throw new IllegalArgumentException("Email cannot be null or blank");
+
+        building.phone = phone;
+        building.email = email;
     }
 
 }

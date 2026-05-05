@@ -58,12 +58,12 @@ public class ResidentModel {
         if (phone == null || phone.isBlank()) {
             throw new IllegalArgumentException("Phone number cannot be null or blank");
         }
-        if (phone.length() != 11 || !containsOnlyDigits(phone)) {
+        if (phone.length() != 11 || !characteresIsDigit(phone)) {
             throw new IllegalArgumentException("Phone number must contain exactly 11 digits");
         }
     }
 
-    private boolean containsOnlyDigits(String value) {
+    private boolean characteresIsDigit(String value) {
         for (int i = 0; i < value.length(); i++) {
             if (!Character.isDigit(value.charAt(i))) {
                 return false;

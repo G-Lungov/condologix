@@ -2,6 +2,8 @@ package com.condologix.application.building;
 
 import com.condologix.application.exception.*;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +38,28 @@ public class BuildingService {
         } catch (Exception e) {
             throw new IllegalArgumentException("Failed to create building: ", e);
         }
+    }
+
+    public BuildingDTO updateBuilding(Long buildingId, BuildingUpdateDTO buildingDTO) {
+        BuildingModel building = buildingRepository.findById(buildingId)
+            .orElseThrow(() -> new ResourceNotFoundException("Building not found: " + buildingId));
+        building.updateContactInfo(buildingDTO.email(), buildingDTO.phone());
+        BuildingModel updateBuilding = buildingRepository.save(building);
+        return toDTO(updateBuilding);
+    }
+
+    public void deleteBuilding(Long buildingId) {
+        BuildingModel building = buildingRepository.findById(buildingId)
+            .orElseThrow(() -> new ResourceNotFoundException("Building not found: " + buildingId));
+        buildingRepository.delete(building);
+    }
+
+    @Transactional(readOnly = true)
+    public List<BuildingDTO> getAllBuildings() {
+        return buildingRepository.findAll()
+            .stream()
+            .map(this::toDTO)
+            .toList();
     }
 
     private BuildingDTO toDTO(BuildingModel building) {

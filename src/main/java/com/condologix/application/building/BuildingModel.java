@@ -76,21 +76,32 @@ public class BuildingModel {
         this.state = state;
     }
 
-    public static boolean characteresIsDigit (String string) {
-        for (int i=0; i < string.length(); i++) {
-            if (!Character.isDigit(string.charAt(i))) {
+        public void updateContactInfo(
+        String email,
+        String phone
+    ) {
+        if (email == null || email.isBlank()) {throw new IllegalArgumentException("Email cannot be null or blank");}
+        validatePhone(phone);
+        this.email = email;
+        this.phone = phone;
+    }
+
+    private void validatePhone(String phone) {
+        if (phone == null || phone.isBlank()) {
+            throw new IllegalArgumentException("Phone number cannot be null or blank");
+        }
+        if (phone.length() != 11 || !characteresIsDigit(phone)) {
+            throw new IllegalArgumentException("Phone number must contain exactly 11 digits");
+        }
+    }
+
+    public static boolean characteresIsDigit(String value) {
+        for (int i=0; i < value.length(); i++) {
+            if (!Character.isDigit(value.charAt(i))) {
                 return false;
             }
         }
         return true;
-    }
-
-    public static void updateContactInfo(BuildingModel building, String phone, String email) {
-        if (phone == null || phone.length() != 11 || !characteresIsDigit(phone)) throw new IllegalArgumentException("Phone cannot be null, must have 11 digits");
-        if (email == null || email.isBlank()) throw new IllegalArgumentException("Email cannot be null or blank");
-
-        building.phone = phone;
-        building.email = email;
     }
 
 }

@@ -10,6 +10,7 @@ public interface OrderRepository extends JpaRepository<OrderModel, Long> {
     List<OrderModel> findByBuildingId(Long buildingId);
     List<OrderModel> findByBuildingIdAndStatus(Long buildingId, OrderStatus status);
     List<OrderModel> findByResidentId(Long residentId);
+    List<OrderModel> findByBuildingIdAndResidentId(Long buildingId, Long residentId);
     List<OrderModel> findByResidentIdAndStatus(Long residentId, OrderStatus status);
     List<OrderModel> findByBuildingIdAndResidentIsNull(Long buildingId);
     Optional<OrderModel> findByTrackingCode(String trackingCode);

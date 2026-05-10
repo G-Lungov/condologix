@@ -4,6 +4,7 @@ import com.condologix.application.exception.*;
 
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,10 @@ public class BuildingService {
     }
 
     public BuildingDTO createBuilding(BuildingCreateDTO buildingDTO) {
+        if (buildingRepository.existsByCnpj(buildingDTO.cnpj())) {
+            throw new IllegalStateException("Building with the same CNPJ already exists");
+        }
+
         BuildingModel building = new BuildingModel(
             buildingDTO.cnpj(),
             buildingDTO.legalName(),
@@ -35,8 +40,8 @@ public class BuildingService {
         try {
             BuildingModel savedBuilding = buildingRepository.save(building);
             return toDTO(savedBuilding);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Failed to create building: ", e);
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalStateException("Failed to create building due to data integrity violation", e);
         }
     }
 

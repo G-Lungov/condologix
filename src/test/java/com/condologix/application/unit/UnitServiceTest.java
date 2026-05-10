@@ -159,6 +159,8 @@ class UnitServiceTest {
 
     private BuildingModel createBuilding(Long id) {
         BuildingModel building = new BuildingModel(
+            "12345678000199",
+            "Condo One LTDA",
             "Condo One",
             "11999999999",
             "condo@example.com",

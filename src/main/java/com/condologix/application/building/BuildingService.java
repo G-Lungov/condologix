@@ -55,6 +55,13 @@ public class BuildingService {
     }
 
     @Transactional(readOnly = true)
+    public BuildingDTO getBuildingById(Long buildingId) {
+        BuildingModel building = buildingRepository.findById(buildingId)
+            .orElseThrow(() -> new ResourceNotFoundException("Building not found: " + buildingId));
+        return toDTO(building);
+    }
+
+    @Transactional(readOnly = true)
     public List<BuildingDTO> getAllBuildings() {
         return buildingRepository.findAll()
             .stream()

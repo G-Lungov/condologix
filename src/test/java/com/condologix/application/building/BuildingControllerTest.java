@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(BuildingController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @Import(GlobalExceptionHandler.class)
-public class BuildingControllerTest {
+class BuildingControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -55,7 +55,17 @@ public class BuildingControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                     {
-
+                        "cnpj": "12345678000199",
+                        "legalName": "Condo One LTDA",
+                        "name": "Condo One",
+                        "phone": "11999999999",
+                        "email": "condo@example.com",
+                        "address": "Main Street",
+                        "addressNumber": 123,
+                        "postalCode": "12345678",
+                        "neighborhood": "Downtown",
+                        "city": "Sao Paulo",
+                        "state": "SP"
                     }
                         """))
                 .andExpect(status().isCreated())
@@ -64,7 +74,8 @@ public class BuildingControllerTest {
                 .andExpect(jsonPath("$.legalName").value("Condo One LTDA"))
                 .andExpect(jsonPath("$.name").value("Condo One"));
     }
-        @Test
+
+    @Test
     void createBuildingShouldReturnBadRequestWhenBodyIsInvalid() throws Exception {
         mockMvc.perform(post("/api/buildings")
                 .contentType(MediaType.APPLICATION_JSON)

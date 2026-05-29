@@ -22,6 +22,49 @@ public class ConciergeService {
         this.buildingRepository = buildingRepository;
     }
 
+    public ConciergeDTO createConcierge(ConciergeCreateDTO conciergeDTO) {
+        BuildingModel building = buildingRepository.findById(conciergeDTO.buildingId())
+            .orElseThrow(() -> new ResourceNotFoundException("Building not found with id: " + conciergeDTO.buildingId()));
+
+        ConciergeModel concierge = new ConciergeModel(
+            building,
+            conciergeDTO.name(),
+            conciergeDTO.phone()
+        );
+
+        try {
+            ConciergeModel savedConcierge = conciergeRepository.save(concierge);
+            return toDTO(savedConcierge);
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalStateException("Failed to create concierge due to data integrity violation", e);
+        }
+    }
+
+    public ConciergeDTO updateConciergeContact(Long conciergeId, ConciergeUpdateDTO conciergeDTO) {
+        ConciergeModel concierge = conciergeRepository.findById(conciergeId)
+            .orElseThrow(() -> new ResourceNotFoundException("Concierge not found with id: " + conciergeId));
+        concierge.updateConciergeContact(conciergeDTO.phone());
+        ConciergeModel updateConcierge = conciergeRepository.save(concierge);
+        return toDTO(updateConciergeContact);
+    }
+
+    public void deleteConcierge(Long conciergeId) {
+        ConciergeModel concierge = conciergeRepository.findById(conciergeId)
+            .orElseThrow(() -> new ResourceNotFoundException("Concierge not found with id: " + conciergeId));
+        conciergeRepository.delete(concierge);
+    }
+
+    @Transactional(readOnly = true)
+    private List<ConciergeDTO> getConciergesByBuildingId(Long buildingId) {
+        if (!buildingRepository.existsById(buildingId) || buildingId == null) {
+            throw new ResourceNotFoundException("Building not found with id: " + buildingId);
+        }
+        return conciergeRepository.findByBuildingId(buildingId)
+            .stream()
+            .map(this::toDTO)
+            .toList();
+    }
+
     private ConciergeDTO toDTO(ConciergeModel concierge) {
         return new ConciergeDTO(
             concierge.getId(),

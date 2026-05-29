@@ -40,12 +40,12 @@ public class ConciergeService {
         }
     }
 
-    public ConciergeDTO updateConciergeContact(Long conciergeId, ConciergeUpdateDTO conciergeDTO) {
+    public ConciergeDTO updateContactInfo(Long conciergeId, ConciergeUpdateDTO conciergeDTO) {
         ConciergeModel concierge = conciergeRepository.findById(conciergeId)
             .orElseThrow(() -> new ResourceNotFoundException("Concierge not found with id: " + conciergeId));
-        concierge.updateConciergeContact(conciergeDTO.phone());
-        ConciergeModel updateConcierge = conciergeRepository.save(concierge);
-        return toDTO(updateConciergeContact);
+        concierge.updateContactInfo(conciergeDTO.phone());
+        ConciergeModel updateContactInfo = conciergeRepository.save(concierge);
+        return toDTO(updateContactInfo);
     }
 
     public void deleteConcierge(Long conciergeId) {

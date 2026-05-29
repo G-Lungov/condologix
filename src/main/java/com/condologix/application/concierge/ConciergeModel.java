@@ -41,6 +41,11 @@ public class ConciergeModel {
         this.phone = phone;
     }
 
+    public void updateContactInfo(String phone) {
+        validatePhone(phone);
+        this.phone = phone;
+    }
+
     private void validatePhone(String phone) {
         if (phone == null || phone.isBlank()) {
             throw new IllegalArgumentException("Phone number cannot be null or blank");

@@ -16,6 +16,7 @@ public interface BuildingRepository extends JpaRepository<BuildingModel, Long> {
     List<BuildingModel> findByNeighborhood(String neighborhood);
     List<BuildingModel> findByCity(String city);
     List<BuildingModel> findByState(String state);
+    Optional<BuildingModel> findById(Long id);
     Optional<BuildingModel> findByCnpj(String cnpj);
     boolean existsByCnpj(String cnpj);
 }

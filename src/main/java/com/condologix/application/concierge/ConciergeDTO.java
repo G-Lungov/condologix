@@ -1,5 +1,9 @@
 package com.condologix.application.concierge;
 
-public class ConciergeDTO {
-
+public record ConciergeDTO (
+    Long id,
+    Long buildingId,
+    String name,
+    String phone
+) {
 }

@@ -55,8 +55,8 @@ public class ConciergeService {
     }
 
     @Transactional(readOnly = true)
-    private List<ConciergeDTO> getConciergesByBuildingId(Long buildingId) {
-        if (!buildingRepository.existsById(buildingId) || buildingId == null) {
+    public List<ConciergeDTO> getConciergesByBuildingId(Long buildingId) {
+        if (buildingId == null || !buildingRepository.existsById(buildingId)) {
             throw new ResourceNotFoundException("Building not found with id: " + buildingId);
         }
         return conciergeRepository.findByBuildingId(buildingId)

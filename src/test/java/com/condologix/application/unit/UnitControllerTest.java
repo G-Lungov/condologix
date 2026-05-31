@@ -2,6 +2,7 @@ package com.condologix.application.unit;
 
 import com.condologix.application.exception.GlobalExceptionHandler;
 import com.condologix.application.exception.ResourceNotFoundException;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,7 @@ class UnitControllerTest {
                         "block": "A",
                         "unitType": "RESIDENTIAL"
                     }
-                    """))
+                """))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id").value(7))
             .andExpect(jsonPath("$.buildingId").value(1))
@@ -71,7 +72,7 @@ class UnitControllerTest {
                         "block": "   ",
                         "unitType": null
                     }
-                    """))
+                """))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.message").value("Validation failed"))
             .andExpect(jsonPath("$.errors").exists());
@@ -91,7 +92,7 @@ class UnitControllerTest {
                         "block": "A",
                         "unitType": "RESIDENTIAL"
                     }
-                    """))
+                """))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$.message").value("Building not found with id: 999"));
     }
@@ -110,7 +111,7 @@ class UnitControllerTest {
                         "block": "A",
                         "unitType": "RESIDENTIAL"
                     }
-                    """))
+                """))
             .andExpect(status().isConflict())
             .andExpect(jsonPath("$.message").value("Unit with the same block and number already exists"));
     }
@@ -127,7 +128,7 @@ class UnitControllerTest {
                     {
                         "unitType": "COMERCIAL"
                     }
-                    """))
+                """))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(7))
             .andExpect(jsonPath("$.unitType").value("COMERCIAL"));
@@ -144,7 +145,7 @@ class UnitControllerTest {
                     {
                         "unitType": "COMERCIAL"
                     }
-                    """))
+                """))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$.message").value("Unit not found with id: 7"));
     }

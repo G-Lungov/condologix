@@ -28,7 +28,10 @@ public class UnitController {
     }
 
     @PutMapping("/{unitId}/type")
-    public ResponseEntity<UnitDTO> updateUnitType(@PathVariable @Positive Long unitId, @Valid @RequestBody UnitUpdateDTO unitDTO) {
+    public ResponseEntity<UnitDTO> updateUnitType(
+        @PathVariable @Positive Long unitId,
+        @Valid @RequestBody UnitUpdateDTO unitDTO
+    ) {
         UnitDTO updatedUnit = unitService.updateUnitType(unitId, unitDTO);
         return ResponseEntity.ok(updatedUnit);
     }

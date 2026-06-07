@@ -1,5 +1,19 @@
 package com.condologix.application.payment;
 
-public class PaymentDTO {
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
+public record PaymentDTO(
+    Long id,
+    Long buildingId,
+    String billingPeriod,
+    BigDecimal amount,
+    BigDecimal interestRate,
+    BigDecimal interestAmount,
+    BigDecimal totalAmount,
+    LocalDate createdAt,
+    LocalDate dueDate,
+    LocalDate paidAt,
+    PaymentStatus status
+) {
 }

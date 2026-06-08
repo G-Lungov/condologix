@@ -9,6 +9,7 @@ public record PaymentDTO(
     String billingPeriod,
     BigDecimal amount,
     BigDecimal interestRate,
+    Integer graceDays,
     BigDecimal interestAmount,
     BigDecimal totalAmount,
     LocalDate createdAt,

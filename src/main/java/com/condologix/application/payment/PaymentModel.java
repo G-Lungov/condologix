@@ -45,6 +45,9 @@ public class PaymentModel {
     @Column(name = "INTEREST_RATE", nullable = false, precision = 5, scale = 4)
     private BigDecimal interestRate;
 
+    @Column(name = "GRACE_DAYS", nullable = false)
+    private Integer graceDays;
+
     @Column(name = "INTEREST_AMOUNT", precision = 15, scale = 2)
     private BigDecimal interestAmount;
 
@@ -75,6 +78,7 @@ public class PaymentModel {
         String billingPeriod,
         BigDecimal amount,
         BigDecimal interestRate,
+        Integer graceDays,
         LocalDate createdAt,
         LocalDate dueDate
     ) {
@@ -90,6 +94,9 @@ public class PaymentModel {
         if (interestRate == null || interestRate.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("Interest rate cannot be negative");
         }
+        if (graceDays == null || graceDays < 0) {
+            throw new IllegalArgumentException("Grace days cannot be negative");
+        }
         if (createdAt == null) {
             throw new IllegalArgumentException("Created date cannot be null");
         }
@@ -101,6 +108,7 @@ public class PaymentModel {
         this.billingPeriod = billingPeriod;
         this.amount = amount;
         this.interestRate = interestRate;
+        this.graceDays = graceDays;
         this.createdAt = createdAt;
         this.dueDate = dueDate;
         this.status = PaymentStatus.PENDING;
@@ -129,11 +137,16 @@ public class PaymentModel {
     }
 
     public BigDecimal calculateInterest(LocalDate paymentDate) {
-        if (!paymentDate.isAfter(dueDate)) {
+        if (paymentDate == null) {
+            throw new IllegalArgumentException("Payment date cannot be null");
+        }
+
+        LocalDate interestStartDate = dueDate.plusDays(graceDays);
+        if (!paymentDate.isAfter(interestStartDate)) {
             return BigDecimal.ZERO;
         }
 
-        long daysLate = java.time.temporal.ChronoUnit.DAYS.between(dueDate, paymentDate);
+        long daysLate = java.time.temporal.ChronoUnit.DAYS.between(interestStartDate, paymentDate);
 
         return amount
                 .multiply(interestRate)

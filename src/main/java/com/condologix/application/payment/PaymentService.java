@@ -17,10 +17,16 @@ public class PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final BuildingRepository buildingRepository;
+    private final PaymentBillingPolicyRepository paymentBillingPolicyRepository;
 
-    public PaymentService(PaymentRepository paymentRepository, BuildingRepository buildingRepository) {
+    public PaymentService(
+        PaymentRepository paymentRepository,
+        BuildingRepository buildingRepository,
+        PaymentBillingPolicyRepository paymentBillingPolicyRepository
+    ) {
         this.paymentRepository = paymentRepository;
         this.buildingRepository = buildingRepository;
+        this.paymentBillingPolicyRepository = paymentBillingPolicyRepository;
     }
 
     public PaymentDTO createPayment(PaymentCreateDTO paymentDTO) {
@@ -31,11 +37,21 @@ public class PaymentService {
             throw new IllegalStateException("Payment already exists for this building and billing period");
         }
 
+        PaymentBillingPolicy billingPolicy = paymentBillingPolicyRepository
+            .findTopByBuildingIdAndValidFromLessThanEqualOrderByValidFromDesc(
+                paymentDTO.buildingId(),
+                paymentDTO.createdAt()
+            )
+            .orElseThrow(() -> new ResourceNotFoundException(
+                "Payment billing policy not found for building id: " + paymentDTO.buildingId()
+            ));
+
         PaymentModel payment = new PaymentModel(
             building,
             paymentDTO.billingPeriod(),
-            paymentDTO.amount(),
-            paymentDTO.interestRate(),
+            billingPolicy.getMonthlyFee(),
+            billingPolicy.getDailyInterestRate(),
+            billingPolicy.getGraceDays(),
             paymentDTO.createdAt(),
             paymentDTO.dueDate()
         );
@@ -104,6 +120,7 @@ public class PaymentService {
             payment.getBillingPeriod(),
             payment.getAmount(),
             payment.getInterestRate(),
+            payment.getGraceDays(),
             payment.getInterestAmount(),
             payment.getTotalAmount(),
             payment.getCreatedAt(),

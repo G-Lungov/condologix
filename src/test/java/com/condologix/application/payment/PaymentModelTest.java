@@ -70,6 +70,7 @@ class PaymentModelTest {
                 "2026-05",
                 new BigDecimal("-1.00"),
                 new BigDecimal("0.01"),
+                0,
                 LocalDate.of(2026, 5, 1),
                 LocalDate.of(2026, 5, 10)
             )
@@ -78,12 +79,29 @@ class PaymentModelTest {
         assertEquals("Amount must be positive", exception.getMessage());
     }
 
+    @Test
+    void calculateInterestShouldRespectGraceDays() {
+        PaymentModel payment = new PaymentModel(
+            createBuilding(1L),
+            "2026-05",
+            new BigDecimal("100.00"),
+            new BigDecimal("0.01"),
+            2,
+            LocalDate.of(2026, 5, 1),
+            LocalDate.of(2026, 5, 10)
+        );
+
+        assertEquals(0, BigDecimal.ZERO.compareTo(payment.calculateInterest(LocalDate.of(2026, 5, 12))));
+        assertEquals(0, new BigDecimal("1.00").compareTo(payment.calculateInterest(LocalDate.of(2026, 5, 13))));
+    }
+
     private PaymentModel createPayment() {
         PaymentModel payment = new PaymentModel(
             createBuilding(1L),
             "2026-05",
             new BigDecimal("100.00"),
             new BigDecimal("0.01"),
+            0,
             LocalDate.of(2026, 5, 1),
             LocalDate.of(2026, 5, 10)
         );

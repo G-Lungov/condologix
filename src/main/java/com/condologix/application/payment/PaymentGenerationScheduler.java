@@ -23,7 +23,7 @@ public class PaymentGenerationScheduler {
     public void generateMonthlyPayments() {
         LocalDate today = LocalDate.now();
 
-        if (paymentCyclePolicy.isGenerationDate(today)) {
+        if (!paymentCyclePolicy.isGenerationDate(today)) {
             return;
         }
         paymentGenerationService.generateMonthlyPayments(today);
